@@ -70,13 +70,13 @@ public class utilMovment {
             sign = 1.0;
         }
         double rotationSpeed = Math.abs(headingPID.calculate(idealAngle, currentAngle));
-        //double RF = ;
-        //double RB = ;
-        //double LF = ;
-        //double LB = ;
-        drive.setMotorPowers(Math.cos(heading)*speed - sign*rotationSpeed, Math.sin(heading)*speed - sign*rotationSpeed,
-                Math.cos(heading)*speed + sign*rotationSpeed, Math.sin(heading)*speed + sign*rotationSpeed);
 
+        double RF = Math.sin(heading)*speed + sign*rotationSpeed;
+        double RB = Math.cos(heading)*speed + sign*rotationSpeed;
+        double LF = Math.cos(heading)*speed - sign*rotationSpeed;
+        double LB = Math.sin(heading)*speed - sign*rotationSpeed;
+
+        drive.setMotorPowers(LF, LB, RB, RF);
     }
 
     public double normalizeAngle(double angle){
@@ -97,4 +97,5 @@ public class utilMovment {
         }
         return false;
     }
+
 }
