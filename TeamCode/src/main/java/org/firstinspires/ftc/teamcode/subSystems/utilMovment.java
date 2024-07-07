@@ -51,32 +51,35 @@ public class utilMovment {
 
     public utilMovment(SampleMecanumDrive drive1){
         drive = drive1;
-        translationalPID = new PIDFController(drive.TRANSLATIONAL_PID.kP,drive.TRANSLATIONAL_PID.kI,drive.TRANSLATIONAL_PID.kD,0);
-        headingPID = new PIDFController(drive.HEADING_PID.kP,drive.HEADING_PID.kI,drive.HEADING_PID.kD,0);
+        translationalPID = new PIDFController(.05, 0, 0.001,0);
+        headingPID = new PIDFController(.4, 0, 0,0);
 
     }
 
-    public void moveTo(Pose2d idealPose){
+    public double[] moveTo(Pose2d idealPose){
         Pose2d currentPose = drive.getPoseEstimate();
         double heading = atan2(idealPose.getX()-currentPose.getX(), idealPose.getY()-currentPose.getY());
-        double speed = Math.hypot(translationalPID.calculate(currentPose.getX(), idealPose.getX()), translationalPID.calculate(currentPose.getY(), idealPose.getY()));
+        double speed = translationalPID.calculate(0, Math.hypot(currentPose.getX() - idealPose.getX(), currentPose.getY() - idealPose.getY()));
         double idealAngle = normalizeAngle(idealPose.getHeading());
         double currentAngle = normalizeAngle(currentPose.getHeading());
         double sign;
         if (clockwise(idealAngle, currentAngle)){
-            sign = -1.0;
-        }
-        else{
             sign = 1.0;
         }
-        double rotationSpeed = Math.abs(headingPID.calculate(idealAngle, currentAngle));
+        else{
+            sign = -1.0;
+        }
+        double rotationSpeed = Math.abs(headingPID.calculate(0, angleBetween(idealAngle, currentAngle)));
 
+        heading -= Math.PI/4;
         double RF = Math.sin(heading)*speed + sign*rotationSpeed;
         double RB = Math.cos(heading)*speed + sign*rotationSpeed;
         double LF = Math.cos(heading)*speed - sign*rotationSpeed;
         double LB = Math.sin(heading)*speed - sign*rotationSpeed;
 
-        drive.setMotorPowers(LF, LB, RB, RF);
+        //drive.setMotorPowers(LF, LB, RB, RF);
+        double[] array = {rotationSpeed, speed, heading};
+        return(array);
     }
 
     public double normalizeAngle(double angle){
@@ -97,5 +100,22 @@ public class utilMovment {
         }
         return false;
     }
+
+    public static double angleBetween(double angle1, double angle2) {
+        // Normalize the angles to be within 0 to 2π
+        angle1 = angle1 % (2 * Math.PI);
+        angle2 = angle2 % (2 * Math.PI);
+
+        // Calculate the difference
+        double diff = Math.abs(angle1 - angle2);
+
+        // Ensure the angle is the smallest possible
+        if (diff > Math.PI) {
+            diff = (2 * Math.PI) - diff;
+        }
+
+        return diff;
+    }
+
 
 }

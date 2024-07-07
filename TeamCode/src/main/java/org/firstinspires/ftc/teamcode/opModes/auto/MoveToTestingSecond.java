@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode.opModes.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.utilMovment;
@@ -25,8 +23,8 @@ import org.firstinspires.ftc.teamcode.subSystems.utilMovment;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="moveToTest", group="Linear OpMode")
-public class MoveToTesting extends LinearOpMode {
+@TeleOp(name="moveToTestSecond", group="Linear OpMode")
+public class MoveToTestingSecond extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -41,22 +39,19 @@ public class MoveToTesting extends LinearOpMode {
 
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(new Pose2d(0, 0,0));
-        util = new utilMovment(drive);
         Pose2d idealPose = new Pose2d(12, 0, 0);
+
+        Trajectory myTrajectory = drive.trajectoryBuilder(new Pose2d())
+                .strafeRight(10)
+                .forward(5)
+                .build();
+
 
         waitForStart();
         runtime.reset();
 
         while (opModeIsActive()) {
-            double[] rotationSpeed = util.moveTo(idealPose);
-            drive.update();
-            telemetry.addData("thinkX", drive.getPoseEstimate().getX());
-            telemetry.addData("thinkY", drive.getPoseEstimate().getY());
-            telemetry.addData("thinkRot", drive.getPoseEstimate().getHeading());
-            telemetry.addData("rotSpeed", rotationSpeed[0]);
-            telemetry.addData("Speed", rotationSpeed[1]);
-            telemetry.addData("heading", rotationSpeed[2]);
-            telemetry.update();
+            drive.followTrajectory(myTrajectory);
         }
     }
 }
