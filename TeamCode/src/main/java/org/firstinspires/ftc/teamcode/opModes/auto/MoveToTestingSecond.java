@@ -42,8 +42,7 @@ public class MoveToTestingSecond extends LinearOpMode {
         Pose2d idealPose = new Pose2d(12, 0, 0);
 
         Trajectory myTrajectory = drive.trajectoryBuilder(new Pose2d())
-                .strafeRight(10)
-                .forward(5)
+                .strafeRight(1)
                 .build();
 
 
@@ -52,6 +51,10 @@ public class MoveToTestingSecond extends LinearOpMode {
 
         while (opModeIsActive()) {
             drive.followTrajectory(myTrajectory);
+            telemetry.addData("thinkX", drive.getPoseEstimate().getX());
+            telemetry.addData("thinkY", drive.getPoseEstimate().getY());
+            telemetry.addData("thinkRot", drive.getPoseEstimate().getHeading());
+            telemetry.update();
         }
     }
 }

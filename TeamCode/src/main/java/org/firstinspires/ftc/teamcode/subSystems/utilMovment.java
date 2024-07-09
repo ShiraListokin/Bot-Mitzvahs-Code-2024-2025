@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.subSystems;
 import static java.lang.Math.*;
 
 import androidx.annotation.NonNull;
+
+import com.arcrobotics.ftclib.controller.PDController;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.PIDFController;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -46,12 +49,13 @@ import java.util.List;
 public class utilMovment {
 
     private SampleMecanumDrive drive;
-    private PIDFController translationalPID;
+    private PIDController translationalPID;
+
     private PIDFController headingPID;
 
     public utilMovment(SampleMecanumDrive drive1){
         drive = drive1;
-        translationalPID = new PIDFController(.05, 0, 0.001,0);
+        translationalPID = new PIDController(0.4, 0, .015);
         headingPID = new PIDFController(.4, 0, 0,0);
 
     }
@@ -59,7 +63,11 @@ public class utilMovment {
     public double[] moveTo(Pose2d idealPose){
         Pose2d currentPose = drive.getPoseEstimate();
         double heading = atan2(idealPose.getX()-currentPose.getX(), idealPose.getY()-currentPose.getY());
-        double speed = translationalPID.calculate(0, Math.hypot(currentPose.getX() - idealPose.getX(), currentPose.getY() - idealPose.getY()));
+        double speed = Math.abs(translationalPID.calculate(Math.hypot(currentPose.getX() - idealPose.getX(), currentPose.getY() - idealPose.getY())));
+        double pSpeed = speed;
+        if(speed > 0.5){
+            speed = 0.5;
+        }
         double idealAngle = normalizeAngle(idealPose.getHeading());
         double currentAngle = normalizeAngle(currentPose.getHeading());
         double sign;
@@ -69,16 +77,16 @@ public class utilMovment {
         else{
             sign = -1.0;
         }
-        double rotationSpeed = Math.abs(headingPID.calculate(0, angleBetween(idealAngle, currentAngle)));
+        double rotationSpeed = Math.abs(headingPID.calculate(angleBetween(idealAngle, currentAngle)));
 
         heading -= Math.PI/4;
-        double RF = Math.sin(heading)*speed + sign*rotationSpeed;
-        double RB = Math.cos(heading)*speed + sign*rotationSpeed;
-        double LF = Math.cos(heading)*speed - sign*rotationSpeed;
-        double LB = Math.sin(heading)*speed - sign*rotationSpeed;
+        double RF = /*Math.sin(heading)*speed*/ + sign*rotationSpeed;
+        double RB = /*Math.cos(heading)*speed*/ + sign*rotationSpeed;
+        double LF = /*Math.cos(heading)*speed*/ - sign*rotationSpeed;
+        double LB = /*Math.sin(heading)*speed*/ - sign*rotationSpeed;
 
-        //drive.setMotorPowers(LF, LB, RB, RF);
-        double[] array = {rotationSpeed, speed, heading};
+        drive.setMotorPowers(LF, LB, RB, RF);
+        double[] array = {rotationSpeed, pSpeed, speed, Math.hypot(currentPose.getX() - idealPose.getX(), currentPose.getY() - idealPose.getY())};
         return(array);
     }
 

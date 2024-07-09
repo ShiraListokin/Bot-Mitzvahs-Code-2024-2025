@@ -42,7 +42,7 @@ public class MoveToTesting extends LinearOpMode {
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(new Pose2d(0, 0,0));
         util = new utilMovment(drive);
-        Pose2d idealPose = new Pose2d(12, 0, 0);
+        Pose2d idealPose = new Pose2d(0, 0, ((Math.PI)/6.0));
 
         waitForStart();
         runtime.reset();
@@ -54,8 +54,9 @@ public class MoveToTesting extends LinearOpMode {
             telemetry.addData("thinkY", drive.getPoseEstimate().getY());
             telemetry.addData("thinkRot", drive.getPoseEstimate().getHeading());
             telemetry.addData("rotSpeed", rotationSpeed[0]);
-            telemetry.addData("Speed", rotationSpeed[1]);
-            telemetry.addData("heading", rotationSpeed[2]);
+            telemetry.addData("pSpeed", rotationSpeed[1]);
+            telemetry.addData("speed", rotationSpeed[2]);
+            telemetry.addData("error", 0.4*rotationSpeed[3] - rotationSpeed[1]);
             telemetry.update();
         }
     }
