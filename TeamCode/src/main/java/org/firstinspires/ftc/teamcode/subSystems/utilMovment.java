@@ -56,13 +56,14 @@ public class utilMovment {
     public utilMovment(SampleMecanumDrive drive1){
         drive = drive1;
         translationalPID = new PIDController(0.4, 0, .015);
-        headingPID = new PIDFController(.4, 0, 0,0);
+        headingPID = new PIDFController(.8, 0.01, 0,0);
 
     }
 
     public double[] moveTo(Pose2d idealPose){
         Pose2d currentPose = drive.getPoseEstimate();
-        double heading = atan2(idealPose.getX()-currentPose.getX(), idealPose.getY()-currentPose.getY());
+        double heading = Math.atan2(currentPose.getY() - idealPose.getY(), currentPose.getX() - idealPose.getX()) - Math.PI;
+        double heading2 = Math.atan2(idealPose.getY()-currentPose.getY(), idealPose.getX()-currentPose.getX());
         double speed = Math.abs(translationalPID.calculate(Math.hypot(currentPose.getX() - idealPose.getX(), currentPose.getY() - idealPose.getY())));
         double pSpeed = speed;
         if(speed > 0.5){
@@ -78,15 +79,12 @@ public class utilMovment {
             sign = -1.0;
         }
         double rotationSpeed = Math.abs(headingPID.calculate(angleBetween(idealAngle, currentAngle)));
+        if(rotationSpeed > 0.4){
+            rotationSpeed = 0.4;
+        }
 
-        heading -= Math.PI/4;
-        double RF = /*Math.sin(heading)*speed*/ + sign*rotationSpeed;
-        double RB = /*Math.cos(heading)*speed*/ + sign*rotationSpeed;
-        double LF = /*Math.cos(heading)*speed*/ - sign*rotationSpeed;
-        double LB = /*Math.sin(heading)*speed*/ - sign*rotationSpeed;
-
-        drive.setMotorPowers(LF, LB, RB, RF);
-        double[] array = {rotationSpeed, pSpeed, speed, Math.hypot(currentPose.getX() - idealPose.getX(), currentPose.getY() - idealPose.getY())};
+        convertToRobotCentric(speed, heading, currentAngle, sign, rotationSpeed);
+        double[] array = {rotationSpeed, pSpeed, speed, heading, heading - currentAngle};
         return(array);
     }
 
@@ -124,6 +122,16 @@ public class utilMovment {
 
         return diff;
     }
+    public void convertToRobotCentric (double speed, double heading, double robotDirection, double rotationDirection, double rotationSpeed){
+        heading -= robotDirection;
+        heading = normalizeAngle(heading);
+        heading += Math.PI/4;
+        double RF = Math.sin(heading)*speed + rotationDirection*rotationSpeed;
+        double RB = Math.cos(heading)*speed + rotationDirection*rotationSpeed;
+        double LF = Math.cos(heading)*speed - rotationDirection*rotationSpeed;
+        double LB = Math.sin(heading)*speed - rotationDirection*rotationSpeed;
 
+        drive.setMotorPowers(LF, LB, RB, RF);
+    }
 
 }
