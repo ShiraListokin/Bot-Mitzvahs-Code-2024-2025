@@ -48,10 +48,10 @@ import java.util.List;
 
 public class utilMovment {
 
-    private SampleMecanumDrive drive;
-    private PIDController translationalPID;
+    protected SampleMecanumDrive drive;
+    protected PIDController translationalPID;
 
-    private PIDFController headingPID;
+    protected PIDFController headingPID;
 
     public utilMovment(SampleMecanumDrive drive1){
         drive = drive1;
@@ -63,11 +63,10 @@ public class utilMovment {
     public double[] moveTo(Pose2d idealPose){
         Pose2d currentPose = drive.getPoseEstimate();
         double heading = Math.atan2(currentPose.getY() - idealPose.getY(), currentPose.getX() - idealPose.getX()) - Math.PI;
-        double heading2 = Math.atan2(idealPose.getY()-currentPose.getY(), idealPose.getX()-currentPose.getX());
         double speed = Math.abs(translationalPID.calculate(Math.hypot(currentPose.getX() - idealPose.getX(), currentPose.getY() - idealPose.getY())));
         double pSpeed = speed;
-        if(speed > 0.5){
-            speed = 0.5;
+        if(speed > 0.6){
+            speed = 0.6;
         }
         double idealAngle = normalizeAngle(idealPose.getHeading());
         double currentAngle = normalizeAngle(currentPose.getHeading());
@@ -88,7 +87,7 @@ public class utilMovment {
         return(array);
     }
 
-    public double normalizeAngle(double angle){
+    protected double normalizeAngle(double angle){
         double twoPi = 2 * Math.PI;
         // Use modulus to bring the angle within the range -2pi to 2pi
         angle = angle % twoPi;
@@ -98,7 +97,7 @@ public class utilMovment {
         }
         return angle;
     }
-    public boolean clockwise (double idealAngle, double currentAngle){
+    protected boolean clockwise (double idealAngle, double currentAngle){
         double eval = currentAngle - idealAngle;
         eval = normalizeAngle(eval);
         if(eval > PI){
@@ -107,7 +106,7 @@ public class utilMovment {
         return false;
     }
 
-    public static double angleBetween(double angle1, double angle2) {
+    protected static double angleBetween(double angle1, double angle2) {
         // Normalize the angles to be within 0 to 2π
         angle1 = angle1 % (2 * Math.PI);
         angle2 = angle2 % (2 * Math.PI);
@@ -122,7 +121,7 @@ public class utilMovment {
 
         return diff;
     }
-    public void convertToRobotCentric (double speed, double heading, double robotDirection, double rotationDirection, double rotationSpeed){
+    protected void convertToRobotCentric (double speed, double heading, double robotDirection, double rotationDirection, double rotationSpeed){
         heading -= robotDirection;
         heading = normalizeAngle(heading);
         heading += Math.PI/4;
