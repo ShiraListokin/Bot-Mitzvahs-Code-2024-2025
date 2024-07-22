@@ -28,6 +28,8 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.roadRunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.roadRunner.trajectorysequence.TrajectorySequenceBuilder;
@@ -58,6 +60,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(3, 0, 0);
     public static PIDCoefficients HEADING_PID = new PIDCoefficients(10, 0, 0);
 
+    public CameraName WebCamFront;
     public static double LATERAL_MULTIPLIER = 1;
 
     public static double VX_WEIGHT = 1;
@@ -104,6 +107,8 @@ public class SampleMecanumDrive extends MecanumDrive {
         leftRear = hardwareMap.get(DcMotorEx.class, "LB");
         rightRear = hardwareMap.get(DcMotorEx.class, "RB");
         rightFront = hardwareMap.get(DcMotorEx.class, "RF");
+
+        WebCamFront = hardwareMap.get(WebcamName.class, "Camera");
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
