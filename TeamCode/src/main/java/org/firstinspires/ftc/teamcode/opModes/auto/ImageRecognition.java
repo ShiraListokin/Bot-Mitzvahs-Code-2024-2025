@@ -28,6 +28,7 @@ import org.firstinspires.ftc.teamcode.subSystems.utilMovment;
  */
 
 @Autonomous(name="ImageRecognition", group="Linear OpMode")
+@Disabled
 public class ImageRecognition extends LinearOpMode{
 
     private SampleMecanumDrive drive;

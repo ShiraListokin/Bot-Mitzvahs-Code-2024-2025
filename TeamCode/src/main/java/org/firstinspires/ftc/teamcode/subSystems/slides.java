@@ -12,10 +12,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class slides {
 
     private DcMotor rightMotor, leftMotor;
-    private double position = 0.0; //starting retracted
-
-    private double spoolCirc = 93.0773; //mm
-    private PIDFController PID;
 
     public slides(HardwareMap hardwareMap){
         rightMotor = hardwareMap.get(DcMotorEx.class, "rightMotor");
@@ -23,16 +19,14 @@ public class slides {
 
         leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        PID = new PIDFController(0,0,0,0);//Not Tuned
-
         rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Reset encoder
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); // Reset encoder
     }
 
     public void moveTo(double idealPosition){
-        position = (rightMotor.getCurrentPosition()/537.6)*93.0773;
-        double power = PID.calculate(position, idealPosition);
-        rightMotor.setPower(power);
-        leftMotor.setPower(power);
+        //position = (rightMotor.getCurrentPosition()/537.6)*93.0773;
+        //double power = PID.calculate(position, idealPosition);
+        rightMotor.setPower(0);
+        leftMotor.setPower(0);
     }
 }

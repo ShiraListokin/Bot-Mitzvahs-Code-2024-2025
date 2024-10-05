@@ -26,6 +26,7 @@ import org.firstinspires.ftc.teamcode.subSystems.utilMovment;
  */
 
 @TeleOp(name="moveToTest", group="Linear OpMode")
+@Disabled
 public class MoveToTesting extends LinearOpMode {
 
     // Declare OpMode members.
