@@ -16,6 +16,23 @@ public class utilMovmentTeleOp extends utilMovment{
         gamepad2 = gamepadTwo;
     }
     double idealAngle;
+
+    public void robotCentricDriver(){
+        double X_Left_Stick = gamepad1.left_stick_x;
+        double Y_Left_Stick = -gamepad1.left_stick_y;
+        double X_Right_Stick = -gamepad1.right_stick_x;
+        double Y_Right_Stick = -gamepad1.right_stick_y;
+        //RB, LF
+
+        //leftFront.setPower(v);
+        //        leftRear.setPower(v1);
+        //        rightRear.setPower(v2);
+        //        rightFront.setPower(v3);
+        double robot_heading = (Math.atan2(Y_Right_Stick, X_Right_Stick)) + Math.PI/4;
+        double speed = 0.7*Math.hypot(X_Right_Stick, Y_Right_Stick);
+        double rotation = 0.6*X_Left_Stick;
+        drive.setMotorPowers(Math.cos(robot_heading) * speed - rotation, Math.sin(robot_heading) * speed  + rotation, Math.cos(robot_heading) * speed  + rotation, Math.sin(robot_heading) * speed  - rotation);
+    }
     public void feildCentricDrive(){
         double X_Left_Stick = gamepad1.left_stick_x;
         double Y_Left_Stick = -gamepad1.left_stick_y;
@@ -23,7 +40,7 @@ public class utilMovmentTeleOp extends utilMovment{
         double Y_Right_Stick = -gamepad1.right_stick_y;
 
         //Rotation
-        double curentHeading = drive.getRawExternalHeading() +(Math.PI/2);
+        double curentHeading = drive.getRawExternalHeading() + Math.PI;
         if(Math.hypot(X_Left_Stick, Y_Left_Stick) > 0.1)
             idealAngle = (Math.atan2(Y_Left_Stick, X_Left_Stick));
         double sign;

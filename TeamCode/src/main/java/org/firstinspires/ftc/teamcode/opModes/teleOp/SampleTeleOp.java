@@ -11,104 +11,78 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.utilMovmentTeleOp;
 
 
 @TeleOp
-public class SampleTeleOp extends OpMode{
+public class SampleTeleOp extends OpMode {
+    SampleMecanumDrive drive;
 
-    //SampleMecanumDrive drive;
+    utilMovmentTeleOp movment;
+    DcMotorEx LeftSlide;
+    DcMotorEx RightSlide;
 
-    //DcMotorEx slide;
-    //utilMovmentTeleOp movment;
+    CRServoImplEx rightIntake;
+    CRServoImplEx leftIntake;
 
-    CRServoImplEx sideRoller1;
-    //CRServoImpl a;
-    CRServoImplEx sideRoller2;
-    DcMotorEx rI;
-    DcMotorEx lI;
+    Servo rightLinkage;
+
+    double slidePower = 0;
 
     @Override
     public void init() {
-        //drive = new SampleMecanumDrive(hardwareMap);
-        //movment = new utilMovmentTeleOp(drive, gamepad1, gamepad2);
+        drive = new SampleMecanumDrive(hardwareMap);
+        movment = new utilMovmentTeleOp(drive, gamepad1, gamepad2);
         //slide = hardwareMap.get(DcMotorEx.class, "slide");
-        rI = hardwareMap.get(DcMotorEx.class, "rI");
-        lI = hardwareMap.get(DcMotorEx.class, "lI");
-        sideRoller1 = hardwareMap.get(CRServoImplEx.class, "sideRoller1");
-        sideRoller2= hardwareMap.get(CRServoImplEx.class, "sideRoller2");
+        LeftSlide = hardwareMap.get(DcMotorEx.class, "LeftSlide");
+        RightSlide = hardwareMap.get(DcMotorEx.class, "RightSlide");
+        rightIntake = hardwareMap.get(CRServoImplEx.class, "rightIntake");
+        leftIntake = hardwareMap.get(CRServoImplEx.class, "leftIntake");
+        rightLinkage = hardwareMap.get(Servo.class, "rightLinkage");
     }
 
     @Override
     public void loop() {
-        //movment.feildCentricDrive();
-        if (gamepad1.x) {
-            /*topRoller.setPower(1);
-            counterRoller.setPower(-1);
-            sideRoller1.setPower(-1);
-            sideRoller2.setPower(1);
-            telemetry.addData("Durection", "forwards");
+        movment.robotCentricDriver();
+        if(gamepad1.left_trigger < 0.1){
+            LeftSlide.setPower(1 * -gamepad1.right_trigger);
+            RightSlide.setPower(1 * gamepad1.right_trigger);
+        }
+        else{
+            LeftSlide.setPower( gamepad1.left_trigger);
+            RightSlide.setPower(-gamepad1.left_trigger);
+        }
 
-             */
-            telemetry.addData("Durection", "forwards");
-            rI.setPower(1);
-            lI.setPower(-1);
-            sideRoller1.setPower(-1);
-            sideRoller2.setPower(1);
+        if (gamepad1.dpad_up) {
+            rightLinkage.setPosition(.5);
+        }
+        if (gamepad1.dpad_down) {
+            rightLinkage.setPosition(1);
+        }
+        if (gamepad1.dpad_right || gamepad1.dpad_left) {
+            slidePower = 0;
+            LeftSlide.setPower(0);
+            RightSlide.setPower(0);
+        }
+        if (gamepad1.x) {
+            rightIntake.setPower(1);
+            leftIntake.setPower(-1);
+            telemetry.addData("Direction", "forward");
         }
         if (gamepad1.b) {
-            /*
-            topRoller.setPower(-1);
-            counterRoller.setPower(1);
-            sideRoller1.setPower(1);
-            sideRoller2.setPower(-1);
-            telemetry.addData("Durection", "Backwards");
-
-             */
-            telemetry.addData("Durection", "Backwards");
-            sideRoller1.setPower(1);
-            sideRoller2.setPower(-1);
-            rI.setPower(-1);
-            lI.setPower(1);
-
+            rightIntake.setPower(-1);
+            leftIntake.setPower(1);
+            telemetry.addData("Direction", "backwards");
         }
-        if (!(gamepad1.b || gamepad1.x)){
-            /*
-            topRoller.setPower(-1);
-            counterRoller.setPower(1);
-            sideRoller1.setPower(-1);
-            sideRoller2.setPower(1);
-            telemetry.addData("Durection", "None");
-
-             */
-            telemetry.addData("Durection", "None");
-            sideRoller1.setPower(0);
-            sideRoller2.setPower(0);
-            rI.setPower(0);
-            lI.setPower(0);
-
+        if (gamepad1.y) {
+            rightIntake.setPower(0);
+            leftIntake.setPower(0);
+            telemetry.addData("Direction", "off");
         }
-
-
-
-        /*if(gamepad1.y){
-            slide.setPower(-0.4);
-            telemetry.addData ("direction", "up");
-        }
-        if(gamepad1.a){
-            slide.setPower(0.4 );
-            telemetry.addData ("direction", "down");
-        }
-        if(gamepad1.dpad_down){
-            slide.setPower(0);
-        }
-        */
-        /*if(gamepad1.dpad_up){
-            topRoller.setPower(0);
-            //counterRoller.setPower(0);
-        }*/
-        telemetry.update();
     }
 }
+
