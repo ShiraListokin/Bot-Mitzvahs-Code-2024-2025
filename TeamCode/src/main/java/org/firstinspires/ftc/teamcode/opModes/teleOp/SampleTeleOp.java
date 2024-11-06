@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opModes.teleOp;
 
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.CRServoImpl;
@@ -26,63 +27,71 @@ public class SampleTeleOp extends OpMode {
     DcMotorEx LeftSlide;
     DcMotorEx RightSlide;
 
-    CRServoImplEx rightIntake;
-    CRServoImplEx leftIntake;
+    Servo RLinkage;
+    Servo LLinkage;
+    CRServoImplEx LIntake; // left intake
+    CRServoImplEx RIntake; // right intake
+    PIDController slide;
 
-    Servo rightLinkage;
-
-    double slidePower = 0;
+    double idealLocation = 0;
 
     @Override
     public void init() {
         drive = new SampleMecanumDrive(hardwareMap);
         movment = new utilMovmentTeleOp(drive, gamepad1, gamepad2);
-        //slide = hardwareMap.get(DcMotorEx.class, "slide");
-        LeftSlide = hardwareMap.get(DcMotorEx.class, "LeftSlide");
-        RightSlide = hardwareMap.get(DcMotorEx.class, "RightSlide");
-        rightIntake = hardwareMap.get(CRServoImplEx.class, "rightIntake");
-        leftIntake = hardwareMap.get(CRServoImplEx.class, "leftIntake");
-        rightLinkage = hardwareMap.get(Servo.class, "rightLinkage");
+
+        LeftSlide = hardwareMap.get(DcMotorEx.class, "LSlide");
+        RightSlide = hardwareMap.get(DcMotorEx.class, "RSlide");
+
+        RLinkage = hardwareMap.get(Servo.class, "RLinkage");
+        LLinkage = hardwareMap.get(Servo.class, "LLinkage");
+
+        LIntake = hardwareMap.get(CRServoImplEx.class, "LIntake");
+        RIntake = hardwareMap.get(CRServoImplEx.class, "RIntake");
+
+        RightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slide = new PIDController(0.02, 0, 0); //Increace p
     }
 
     @Override
     public void loop() {
         movment.robotCentricDriver();
-        if(gamepad1.left_trigger < 0.1){
-            LeftSlide.setPower(1 * -gamepad1.right_trigger);
-            RightSlide.setPower(1 * gamepad1.right_trigger);
+        telemetry.addData("slide position", (RightSlide.getCurrentPosition()/384.5)*33*Math.PI);
+        if(gamepad1.dpad_up){
+            idealLocation = 1100; //high basket
         }
-        else{
-            LeftSlide.setPower( gamepad1.left_trigger);
-            RightSlide.setPower(-gamepad1.left_trigger);
+        if(gamepad1.dpad_down){
+            idealLocation = 0; //rest (will be higher later)
         }
+        if(gamepad1.dpad_right){
+            idealLocation = 400; //Hang
+        }
+        if(gamepad1.dpad_right){
+            idealLocation = 600; //chamber
+        }
+        double PID = slide.calculate((RightSlide.getCurrentPosition()/384.5)*33*Math.PI-idealLocation);
+        if(PID>0.6){
+            PID = 0.6;
+        }
+        double slidePower = 0.4+PID;
+        telemetry.addData("slide power", slidePower);
+        LeftSlide.setPower( -slidePower);
+        RightSlide.setPower(slidePower);
 
-        if (gamepad1.dpad_up) {
-            rightLinkage.setPosition(.5);
-        }
-        if (gamepad1.dpad_down) {
-            rightLinkage.setPosition(1);
-        }
-        if (gamepad1.dpad_right || gamepad1.dpad_left) {
-            slidePower = 0;
-            LeftSlide.setPower(0);
-            RightSlide.setPower(0);
-        }
         if (gamepad1.x) {
-            rightIntake.setPower(1);
-            leftIntake.setPower(-1);
-            telemetry.addData("Direction", "forward");
-        }
-        if (gamepad1.b) {
-            rightIntake.setPower(-1);
-            leftIntake.setPower(1);
-            telemetry.addData("Direction", "backwards");
+            //linkage test
         }
         if (gamepad1.y) {
-            rightIntake.setPower(0);
-            leftIntake.setPower(0);
-            telemetry.addData("Direction", "off");
+            RIntake.setPower(-1);
+            LIntake.setPower(1);
+            telemetry.addData("Direction", "intake");
         }
+        else{
+            RIntake.setPower(1);
+            LIntake.setPower(-1);
+            telemetry.addData("Direction", "deposit");
+        }
+
     }
 }
 

@@ -29,7 +29,7 @@ public class utilMovmentTeleOp extends utilMovment{
         //        rightRear.setPower(v2);
         //        rightFront.setPower(v3);
         double robot_heading = (Math.atan2(Y_Right_Stick, X_Right_Stick)) + Math.PI/4;
-        double speed = 0.7*Math.hypot(X_Right_Stick, Y_Right_Stick);
+        double speed = Math.hypot(X_Right_Stick, Y_Right_Stick);
         double rotation = 0.6*X_Left_Stick;
         drive.setMotorPowers(Math.cos(robot_heading) * speed - rotation, Math.sin(robot_heading) * speed  + rotation, Math.cos(robot_heading) * speed  + rotation, Math.sin(robot_heading) * speed  - rotation);
     }
