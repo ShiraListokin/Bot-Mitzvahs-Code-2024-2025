@@ -28,23 +28,19 @@ public class ServoTesting extends OpMode {
     @Override
     public void init() {
         //slide = hardwareMap.get(DcMotorEx.class, "slide");
-        rightLinkage = hardwareMap.get(Servo.class, "rightLinkage");
-        leftLinkage = hardwareMap.get(Servo.class, "leftLinkage");
+        rightLinkage = hardwareMap.get(Servo.class, "RLinkage");
+        leftLinkage = hardwareMap.get(Servo.class, "LLinkage");
     }
 
     @Override
     public void loop() {
-        if(gamepad1.x){
-            rightLinkage.setPosition(0);
-        }
-        if(gamepad1.b){
+        if(gamepad1.y){
+            leftLinkage.setPosition(1);
             rightLinkage.setPosition(0.64);
         }
-        if(gamepad1.y){
-            leftLinkage.setPosition(0);
-        }
         if(gamepad1.a){
-           leftLinkage.setPosition(1);
+            leftLinkage.setPosition(1);
+            rightLinkage.setPosition(0);
         }
     }
 }

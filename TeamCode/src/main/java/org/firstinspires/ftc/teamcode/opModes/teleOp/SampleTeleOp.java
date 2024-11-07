@@ -67,7 +67,7 @@ public class SampleTeleOp extends OpMode {
             idealLocation = 400; //Hang
         }
         if(gamepad1.dpad_right){
-            idealLocation = 600; //chamber
+            idealLocation = 400; //chamber
         }
         double PID = slide.calculate((RightSlide.getCurrentPosition()/384.5)*33*Math.PI-idealLocation);
         if(PID>0.6){
@@ -78,9 +78,16 @@ public class SampleTeleOp extends OpMode {
         LeftSlide.setPower( -slidePower);
         RightSlide.setPower(slidePower);
 
-        if (gamepad1.x) {
-            //linkage test
+        /*if (gamepad1.x) {
+            RLinkage.setPosition(0.64);
+            //LLinkage.setPosition(0);
         }
+        if (gamepad1.a) {
+            RLinkage.setPosition(0);
+            //LLinkage.setPosition(1);
+        }
+
+         */
         if (gamepad1.y) {
             RIntake.setPower(-1);
             LIntake.setPower(1);
