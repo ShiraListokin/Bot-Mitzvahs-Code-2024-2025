@@ -27,6 +27,7 @@ import org.firstinspires.ftc.teamcode.subSystems.utilMovment;
 
 @TeleOp(name="deadWheelOffsetTest", group="Linear OpMode")
 @Disabled
+
 public class deadWheelOffset extends LinearOpMode {
 
     // Declare OpMode members.
