@@ -35,11 +35,11 @@ public class ServoTesting extends OpMode {
     @Override
     public void loop() {
         if(gamepad1.y){
-            leftLinkage.setPosition(1);
-            rightLinkage.setPosition(0.64);
+            leftLinkage.setPosition(0);
+            rightLinkage.setPosition(1);
         }
         if(gamepad1.a){
-            leftLinkage.setPosition(1);
+            leftLinkage.setPosition(.65);
             rightLinkage.setPosition(0);
         }
     }
