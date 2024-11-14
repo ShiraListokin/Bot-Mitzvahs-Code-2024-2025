@@ -31,8 +31,12 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     public static double WHEEL_RADIUS = 0.629921; // in
     public static double GEAR_RATIO = 1.0; // output (wheel) speed / input (encoder) speed
 
+    public static double X_MULTIPLIER = 1; // Multiplier in the X direction
+    public static double Y_MULTIPLIER = 1;
     public static double LATERAL_DISTANCE = 6.61417; // in; distance between the left and right wheels
     public static double FORWARD_OFFSET = -6.63332913386; // in; offset of the lateral wheel
+
+    public static double rightOffset = 1.0035;
 
     private Encoder leftEncoder, rightEncoder, frontEncoder;
 
@@ -48,9 +52,9 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         lastEncPositions = lastTrackingEncPositions;
         lastEncVels = lastTrackingEncVels;
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LB"));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LSlide"));
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LF"));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LSlide"));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LF"));
+        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LB"));
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
     }
@@ -73,7 +77,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
 
         return Arrays.asList(
                 encoderTicksToInches(leftPos),
-                encoderTicksToInches(rightPos),
+                encoderTicksToInches(rightPos) * rightOffset,
                 encoderTicksToInches(frontPos)
         );
     }
@@ -92,7 +96,7 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
 
         return Arrays.asList(
                 encoderTicksToInches(leftVel),
-                encoderTicksToInches(rightVel),
+                encoderTicksToInches(rightVel) * rightOffset,
                 encoderTicksToInches(frontVel)
         );
     }

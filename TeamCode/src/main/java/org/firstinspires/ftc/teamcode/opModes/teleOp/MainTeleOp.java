@@ -32,22 +32,28 @@ public class MainTeleOp extends OpMode {
         slide.update();
         in.update();
         if(gamepad1.dpad_up){
-            slide.slideTo(1050); //high basket
+            slide.slideTo(1125); //high basket
+            slide.linkageTo(0);
         }
         if(gamepad1.dpad_down){
             slide.slideTo(0); //rest (will be higher later)
+            slide.linkageTo(0);
         }
         if(gamepad1.dpad_left){
-            slide.slideTo(400); //Hang
+            slide.slideTo(330); //Hang
         }
         if(gamepad1.dpad_right){
-            slide.slideTo(500); //chamber
+            slide.slideTo(740); //chamber
+            slide.linkageTo(0.7);
         }
         if (gamepad1.y) {
-            in.direction(false);
+            in.direction(-1);
         }
-        else{
-            in.direction(true);
+        if(gamepad1.a){
+            in.direction(1);
+        }
+        if(gamepad1.b){
+            in.direction(0);
         }
     }
 }

@@ -35,14 +35,14 @@ import java.util.List;
  */
 public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     public static double TICKS_PER_REV = 2000.0;
-    public static double WHEEL_RADIUS = 0.944882; // in
+    public static double WHEEL_RADIUS = 0.629921; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double PARALLEL_X = 1.975342;//-1.98706547460600254; // X is the up and down direction
-    public static double PARALLEL_Y = -5.297068;//-5.4002408143126095; // Y is the strafe direction
+    public static double PARALLEL_X = -6.72723700787;//-1.98706547460600254; // X is the up and down direction
+    public static double PARALLEL_Y = 3.30709;//-5.4002408143126095; // Y is the strafe direction
 
-    public static double PERPENDICULAR_X = -6.34157; //6.2209923361138495;
-    public static double PERPENDICULAR_Y = 0.6209989374813726;
+    public static double PERPENDICULAR_X = -6.63332913386; //6.2209923361138495;
+    public static double PERPENDICULAR_Y = 0.1450992126;
 
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
@@ -59,10 +59,9 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         this.drive = drive;
 
-        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "RB"));
-        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LF"));
+        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LF"));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LB"));
 
-        parallelEncoder.setDirection(Encoder.Direction.REVERSE);
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
     }
@@ -78,8 +77,6 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
         parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "RB"));
         perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LF"));
 
-        parallelEncoder.setDirection(Encoder.Direction.REVERSE);
-        perpendicularEncoder.setDirection(Encoder.Direction.REVERSE);
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
     }

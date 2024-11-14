@@ -62,7 +62,7 @@ public class utilMovment {
 
     public double[] moveTo(Pose2d idealPose){
         Pose2d currentPose = drive.getPoseEstimate();
-        double heading = Math.atan2(currentPose.getY() - idealPose.getY(), currentPose.getX() - idealPose.getX()) - Math.PI;
+        double heading = -Math.atan2(currentPose.getY() - idealPose.getY(), currentPose.getX() - idealPose.getX());
         double speed = Math.abs(translationalPID.calculate(Math.hypot(currentPose.getX() - idealPose.getX(), currentPose.getY() - idealPose.getY())));
         double pSpeed = speed;
         if(speed > 0.6){
@@ -124,11 +124,11 @@ public class utilMovment {
     protected void convertToRobotCentric (double speed, double heading, double robotDirection, double rotationDirection, double rotationSpeed){
         heading -= robotDirection;
         heading = normalizeAngle(heading);
-        heading += Math.PI/4;
-        double RF = Math.sin(heading)*speed + rotationDirection*rotationSpeed;
-        double RB = Math.cos(heading)*speed + rotationDirection*rotationSpeed;
-        double LF = Math.cos(heading)*speed - rotationDirection*rotationSpeed;
-        double LB = Math.sin(heading)*speed - rotationDirection*rotationSpeed;
+        heading -= Math.PI/4;
+        double RF = /*Math.sin(heading)*speed*/ + rotationDirection*rotationSpeed;
+        double RB =/*Math.cos(heading)*speed*/ + rotationDirection*rotationSpeed;
+        double LF = /*Math.cos(heading)*speed*/ - rotationDirection*rotationSpeed;
+        double LB = /*Math.sin(heading)*speed*/ - rotationDirection*rotationSpeed;
 
         drive.setMotorPowers(LF, LB, RB, RF);
     }

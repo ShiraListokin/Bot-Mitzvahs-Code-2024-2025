@@ -19,28 +19,22 @@ public class intake {
 
     private Telemetry telemetry;
 
-    boolean intaking;
+    double intaking;
     public intake(HardwareMap hardwareMap, Telemetry t){
         telemetry = t;
         LIntake = hardwareMap.get(CRServoImplEx.class, "LIntake");
         RIntake = hardwareMap.get(CRServoImplEx.class, "RIntake");
     }
 
-    public void direction(boolean i){
+    public void direction(double i){
         intaking = i;
+
     }
 
     public void update(){
-        if(intaking){
-            RIntake.setPower(1);
-            LIntake.setPower(-1);
-            telemetry.addData("Direction", "intake");
-        }
-        else{
-            RIntake.setPower(-1);
-            LIntake.setPower(1);
-            telemetry.addData("Direction", "deposit");
-        }
+        RIntake.setPower(intaking);
+        LIntake.setPower(-intaking);
+
     }
 
 }

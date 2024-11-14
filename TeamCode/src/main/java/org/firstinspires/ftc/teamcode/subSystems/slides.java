@@ -10,12 +10,16 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 public class slides {
 
     DcMotorEx LeftSlide, RightSlide;
+
+    ServoImplEx leftLinkage, rightLinkage;
 
     PIDController PID;
 
@@ -25,29 +29,51 @@ public class slides {
 
     double idealPosition;
 
+    double[] state;
+
     public slides(HardwareMap hardwareMap, Telemetry t){
         LeftSlide = hardwareMap.get(DcMotorEx.class, "LSlide");
         RightSlide = hardwareMap.get(DcMotorEx.class, "RSlide");
 
+        rightLinkage = hardwareMap.get(ServoImplEx.class, "RLinkage");
+        leftLinkage = hardwareMap.get(ServoImplEx.class, "LLinkage");
+
         telemetry = t;
 
-        LeftSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         LeftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
         PID = new PIDController(0.02, 0, 0);
+
+        state = new double[2];
+        state[0] = 0.0; //slide
+        state[1] = 0.0; //linkage
     }
 
     public void update(){
-        double power = PID.calculate((RightSlide.getCurrentPosition()/384.5)*33*Math.PI-idealPosition);
+        double power = PID.calculate((RightSlide.getCurrentPosition()/384.5)*33.0*Math.PI-idealPosition);
+
 
         telemetry.addData("slide position", (RightSlide.getCurrentPosition()/384.5)*33*Math.PI);
 
         slidePower = 0.4 + power;
 
+        if(slidePower > 1.0){
+            slidePower = 1.0;
+        }
+        if(slidePower < -1.0){
+            slidePower = -1.0;
+        }
+
         telemetry.addData("slide power", slidePower);
+        telemetry.addData("L current draw", LeftSlide.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("R current draw", RightSlide.getCurrent(CurrentUnit.AMPS));
 
         LeftSlide.setPower(slidePower);
         RightSlide.setPower(slidePower);
+
+        state[0] = ((RightSlide.getCurrentPosition()/384.5)*33*Math.PI);
     }
 
     public void slideTo(double i){
@@ -56,5 +82,17 @@ public class slides {
 
     public void linkageTo(double idealExtensin){
 
+        double L = 0.6*idealExtensin;
+        double R = 0.6*idealExtensin;
+
+        leftLinkage.setPosition(0.15 + L);
+        rightLinkage.setPosition(1 - R);
+
+        state[1] = idealExtensin;
+
+    }
+
+    public double[] state(){
+        return state;
     }
 }

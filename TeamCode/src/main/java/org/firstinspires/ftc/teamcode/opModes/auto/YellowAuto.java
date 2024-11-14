@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opModes.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -9,7 +10,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subSystems.intake;
+import org.firstinspires.ftc.teamcode.subSystems.slides;
 import org.firstinspires.ftc.teamcode.subSystems.utilMovment;
+import org.firstinspires.ftc.teamcode.subSystems.utilMovmentTeleOp;
+
+import java.util.concurrent.TimeUnit;
 
 
 /*
@@ -25,40 +31,51 @@ import org.firstinspires.ftc.teamcode.subSystems.utilMovment;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="moveToTest", group="Linear OpMode")
-public class MoveToTesting extends LinearOpMode {
+@Autonomous(name="YellowAuto")
+public class YellowAuto extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
     SampleMecanumDrive drive;
+
     utilMovment util;
+
+    intake in;
+    slides slide;
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        in = new intake(hardwareMap, telemetry);
+        slide = new slides(hardwareMap, telemetry);
+
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(new Pose2d(0, 0,0));
+
         util = new utilMovment(drive);
-        Pose2d idealPose = new Pose2d(-12, 0, 0);
+        Pose2d idealPose = new Pose2d(36, -1, 0);
 
         waitForStart();
         runtime.reset();
 
         while (opModeIsActive()) {
-            double[] rotationSpeed = util.moveTo(idealPose);
-            drive.update();
-            telemetry.addData("thinkX", drive.getPoseEstimate().getX());
-            telemetry.addData("thinkY", drive.getPoseEstimate().getY());
-            telemetry.addData("thinkRot", drive.getPoseEstimate().getHeading());
-            telemetry.addData("rotSpeed", rotationSpeed[0]);
-            telemetry.addData("pSpeed", rotationSpeed[1]);
-            telemetry.addData("speed", rotationSpeed[2]);
-            telemetry.addData("heading", rotationSpeed[3]);
-            telemetry.addData("Ajusted", rotationSpeed[4]);
-            telemetry.update();
+            slide.linkageTo(0);
+            if(runtime.now(TimeUnit.SECONDS) < 10){
+                util.moveTo(idealPose);
+                drive.update();
+                slide.slideTo(1125);
+                slide.update();
+            }
+            if(slide.state()[0] > 1100 && drive.getPoseEstimate().getX() > 35){
+                in.direction(-1.0);
+            }
+            if(runtime.now(TimeUnit.SECONDS) > 10){
+                slide.slideTo(0);
+                util.moveTo(new Pose2d(0, 0,0));
+            }
         }
     }
 }
