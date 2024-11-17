@@ -51,25 +51,45 @@ public class utilMovment {
     protected SampleMecanumDrive drive;
     protected PIDController translationalPID;
 
-    protected PIDFController headingPID;
+    protected PIDController headingPID;
 
     public utilMovment(SampleMecanumDrive drive1){
         drive = drive1;
-        translationalPID = new PIDController(0.4, 0, .015);
-        headingPID = new PIDFController(.8, 0.01, 0,0);
+        translationalPID = new PIDController(0.5, 0, 0); //tune
+        headingPID = new PIDController(.8, 0, 0.0); //tune
 
     }
 
     public double[] moveTo(Pose2d idealPose){
         Pose2d currentPose = drive.getPoseEstimate();
-        double heading = -Math.atan2(currentPose.getY() - idealPose.getY(), currentPose.getX() - idealPose.getX());
-        double speed = Math.abs(translationalPID.calculate(Math.hypot(currentPose.getX() - idealPose.getX(), currentPose.getY() - idealPose.getY())));
-        double pSpeed = speed;
-        if(speed > 0.6){
-            speed = 0.6;
+
+        //Givens (GO MR FEILD)
+        double xi = currentPose.getX();
+        double yi = currentPose.getY();
+        double thetai = currentPose.getHeading();
+
+        double xf = idealPose.getX();
+        double yf = idealPose.getY();
+        double thetaf = idealPose.getHeading();
+
+        double deltaX = xf-xi;
+        double deltaY = yf-yi;
+
+        //speed
+        double heading = Math.atan2(deltaY, deltaX);
+        double distance = Math.hypot(deltaX, deltaY);
+        double speed = Math.abs(translationalPID.calculate(distance));
+
+        //speedCap
+        if(speed > 1){
+            speed = 1;
         }
-        double idealAngle = normalizeAngle(idealPose.getHeading());
-        double currentAngle = normalizeAngle(currentPose.getHeading());
+
+        //angleGivens
+        double idealAngle = normalizeAngle(thetaf);
+        double currentAngle = normalizeAngle(thetai);
+
+        //directionToTurn
         double sign;
         if (clockwise(idealAngle, currentAngle)){
             sign = 1.0;
@@ -77,13 +97,18 @@ public class utilMovment {
         else{
             sign = -1.0;
         }
-        double rotationSpeed = Math.abs(headingPID.calculate(angleBetween(idealAngle, currentAngle)));
+
+        //rotSpeed
+        double angleInBetween = angleBetween(idealAngle, currentAngle);
+        double rotationSpeed = Math.abs(headingPID.calculate(angleInBetween));
+
+        //rotationCap
         if(rotationSpeed > 0.4){
             rotationSpeed = 0.4;
         }
 
         convertToRobotCentric(speed, heading, currentAngle, sign, rotationSpeed);
-        double[] array = {rotationSpeed, pSpeed, speed, heading, heading - currentAngle};
+        double[] array = {rotationSpeed, speed, heading, heading - currentAngle};
         return(array);
     }
 
@@ -100,7 +125,7 @@ public class utilMovment {
     protected boolean clockwise (double idealAngle, double currentAngle){
         double eval = currentAngle - idealAngle;
         eval = normalizeAngle(eval);
-        if(eval > PI){
+        if(eval > Math.PI){
             return true;
         }
         return false;
@@ -121,14 +146,13 @@ public class utilMovment {
 
         return diff;
     }
-    protected void convertToRobotCentric (double speed, double heading, double robotDirection, double rotationDirection, double rotationSpeed){
-        heading -= robotDirection;
-        heading = normalizeAngle(heading);
-        heading -= Math.PI/4;
-        double RF = /*Math.sin(heading)*speed*/ + rotationDirection*rotationSpeed;
-        double RB =/*Math.cos(heading)*speed*/ + rotationDirection*rotationSpeed;
-        double LF = /*Math.cos(heading)*speed*/ - rotationDirection*rotationSpeed;
-        double LB = /*Math.sin(heading)*speed*/ - rotationDirection*rotationSpeed;
+    public void convertToRobotCentric (double speed, double feildHeading, double robotDirection, double rotationDirection, double rotationSpeed){
+        double heading = feildHeading - robotDirection;
+        heading += Math.PI/4;
+        double RF = Math.sin(heading)*speed + rotationDirection*rotationSpeed;
+        double RB = Math.cos(heading)*speed + rotationDirection*rotationSpeed;
+        double LF = Math.cos(heading)*speed - rotationDirection*rotationSpeed;
+        double LB = Math.sin(heading)*speed - rotationDirection*rotationSpeed;
 
         drive.setMotorPowers(LF, LB, RB, RF);
     }

@@ -29,6 +29,10 @@ public class slides {
 
     double idealPosition;
 
+    double slideChanger = 0;
+
+    double slideUp = 0;
+
     double[] state;
 
     public slides(HardwareMap hardwareMap, Telemetry t){
@@ -52,12 +56,12 @@ public class slides {
     }
 
     public void update(){
-        double power = PID.calculate((RightSlide.getCurrentPosition()/384.5)*33.0*Math.PI-idealPosition);
+        double power = PID.calculate((RightSlide.getCurrentPosition()/384.5)*33.0*Math.PI-(idealPosition+slideChanger));
 
 
         telemetry.addData("slide position", (RightSlide.getCurrentPosition()/384.5)*33*Math.PI);
 
-        slidePower = 0.4 + power;
+        slidePower = 0.3 + power;
 
         if(slidePower > 1.0){
             slidePower = 1.0;
@@ -92,7 +96,23 @@ public class slides {
 
     }
 
+    public void slideChanger(double amount){
+        slideChanger = amount;
+    }
+
     public double[] state(){
         return state;
     }
+
+    public void linkageToEx(double mm){
+        double theta = Math.acos((Math.pow(360,2)-Math.pow(mm,2)-Math.pow(176.725776275,2))/((-2)*mm*176.725776275));
+        linkageTo((theta/Math.PI));
+    }
+
+    public void extend(double percent){
+        double hypot = percent*(2+176.725776275);
+        linkageToEx(hypot);
+
+    }
+
 }

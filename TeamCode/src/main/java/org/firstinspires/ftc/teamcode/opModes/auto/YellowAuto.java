@@ -56,26 +56,16 @@ public class YellowAuto extends LinearOpMode {
         drive.setPoseEstimate(new Pose2d(0, 0,0));
 
         util = new utilMovment(drive);
-        Pose2d idealPose = new Pose2d(36, -1, 0);
+        Pose2d idealPose = new Pose2d(12, 0, 0);
 
         waitForStart();
         runtime.reset();
-
         while (opModeIsActive()) {
             slide.linkageTo(0);
-            if(runtime.now(TimeUnit.SECONDS) < 10){
-                util.moveTo(idealPose);
-                drive.update();
-                slide.slideTo(1125);
-                slide.update();
-            }
-            if(slide.state()[0] > 1100 && drive.getPoseEstimate().getX() > 35){
-                in.direction(-1.0);
-            }
-            if(runtime.now(TimeUnit.SECONDS) > 10){
-                slide.slideTo(0);
-                util.moveTo(new Pose2d(0, 0,0));
-            }
+            telemetry.addData("time", runtime.time(TimeUnit.SECONDS));
+            telemetry.update();
+            util.moveTo(idealPose);
+            drive.update();
         }
     }
 }

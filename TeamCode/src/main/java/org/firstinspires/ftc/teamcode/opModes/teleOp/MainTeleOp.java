@@ -43,8 +43,8 @@ public class MainTeleOp extends OpMode {
             slide.slideTo(330); //Hang
         }
         if(gamepad1.dpad_right){
-            slide.slideTo(740); //chamber
-            slide.linkageTo(0.7);
+            slide.slideTo(650); //chamber
+            slide.linkageTo(0.3);
         }
         if (gamepad1.y) {
             in.direction(-1);
@@ -54,6 +54,23 @@ public class MainTeleOp extends OpMode {
         }
         if(gamepad1.b){
             in.direction(0);
+        }
+        /*if (gamepad1.right_bumper){
+            slide.slideChanger(40);
+        }
+        else{
+            slide.slideChanger(0);
+        }
+
+         */
+        if (gamepad1.left_bumper){
+            slide.slideChanger(-4000);
+        }
+        else{
+            slide.slideChanger(0);
+        }
+        if(gamepad1.x){
+            slide.linkageTo(1);
         }
     }
 }
