@@ -56,6 +56,7 @@ public class utilMovmentTeleOp extends utilMovment{
         if (rotationSpeed > 0.2){
             rotationSpeed = 0.2;
         }
+
         //Translatonal
         double heading = Math.atan2(Y_Right_Stick, X_Right_Stick);
         double speed = Math.hypot(X_Right_Stick,Y_Right_Stick);
