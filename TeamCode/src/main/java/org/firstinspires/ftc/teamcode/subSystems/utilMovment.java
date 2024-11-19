@@ -61,6 +61,11 @@ public class utilMovment {
     }
 
     public double[] moveTo(Pose2d idealPose){
+        double[] array = moveTo(idealPose, 1.0);
+        return array;
+    }
+
+    public double[] moveTo(Pose2d idealPose, double s){
         Pose2d currentPose = drive.getPoseEstimate();
 
         //Givens (GO MR FEILD)
@@ -81,8 +86,8 @@ public class utilMovment {
         double speed = Math.abs(translationalPID.calculate(distance));
 
         //speedCap
-        if(speed > 1){
-            speed = 1;
+        if(speed > s){
+            speed = s;
         }
         if(speed < 0.15){
             speed = 0.15;
