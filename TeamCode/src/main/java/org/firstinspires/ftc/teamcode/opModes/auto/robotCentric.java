@@ -22,6 +22,6 @@ public class robotCentric extends OpMode {
 
     @Override
     public void loop() {
-        movment.convertToRobotCentric(0.5, Math.PI, 3*Math.PI/2, 0, 0);
+        movment.convertToRobotCentric(0, 0, 0, -1, .2);
     }
 }

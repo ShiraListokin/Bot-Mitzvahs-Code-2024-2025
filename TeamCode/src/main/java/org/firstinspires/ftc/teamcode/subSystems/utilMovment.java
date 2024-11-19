@@ -55,8 +55,8 @@ public class utilMovment {
 
     public utilMovment(SampleMecanumDrive drive1){
         drive = drive1;
-        translationalPID = new PIDController(0.5, 0, 0); //tune
-        headingPID = new PIDController(.8, 0, 0.0); //tune
+        translationalPID = new PIDController(0.25, 0, 0.02); //tune
+        headingPID = new PIDController(.8, 0, 0); //tune
 
     }
 
@@ -83,6 +83,9 @@ public class utilMovment {
         //speedCap
         if(speed > 1){
             speed = 1;
+        }
+        if(speed < 0.15){
+            speed = 0.15;
         }
 
         //angleGivens

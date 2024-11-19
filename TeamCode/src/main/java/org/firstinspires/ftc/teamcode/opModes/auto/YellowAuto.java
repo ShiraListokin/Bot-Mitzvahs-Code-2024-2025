@@ -56,7 +56,7 @@ public class YellowAuto extends LinearOpMode {
         drive.setPoseEstimate(new Pose2d(0, 0,0));
 
         util = new utilMovment(drive);
-        Pose2d idealPose = new Pose2d(12, 0, 0);
+        Pose2d idealPose = new Pose2d(10, -13, Math.PI/4);
 
         waitForStart();
         runtime.reset();
@@ -64,8 +64,33 @@ public class YellowAuto extends LinearOpMode {
             slide.linkageTo(0);
             telemetry.addData("time", runtime.time(TimeUnit.SECONDS));
             telemetry.update();
-            util.moveTo(idealPose);
             drive.update();
+            if((runtime.time(TimeUnit.SECONDS) > 1 && runtime.time(TimeUnit.SECONDS) < 9)|| runtime.time(TimeUnit.SECONDS) > 22){
+                slide.slideTo(1150);
+            }
+            else{
+                slide.slideTo(0);
+            }
+            slide.update();
+            if((runtime.time(TimeUnit.SECONDS) > 5 && runtime.time(TimeUnit.SECONDS) < 8) || runtime.time(TimeUnit.SECONDS) > 24){
+                in.direction(-1);
+            }
+            else if(runtime.time(TimeUnit.SECONDS) > 8){
+                in.direction(1);
+            }
+            if(runtime.time(TimeUnit.SECONDS) < 11){
+                util.moveTo(idealPose);
+            }
+            else if(runtime.time(TimeUnit.SECONDS) < 14){
+                util.moveTo(new Pose2d(9.6, -23, 3*Math.PI/2));
+            }
+            else if(runtime.time(TimeUnit.SECONDS) < 18){
+                util.moveTo(new Pose2d(9.6, -33, 3*Math.PI/2));
+            }
+            else{
+                util.moveTo(idealPose);
+            }
+            in.update();
         }
     }
 }

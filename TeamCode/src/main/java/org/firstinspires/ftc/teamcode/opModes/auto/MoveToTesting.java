@@ -42,7 +42,7 @@ public class MoveToTesting extends LinearOpMode {
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(new Pose2d(0, 0,0));
         util = new utilMovment(drive);
-        Pose2d idealPose = new Pose2d(12, 0, 0);
+        Pose2d idealPose = new Pose2d(72, 12, Math.PI/2);
 
         waitForStart();
         runtime.reset();

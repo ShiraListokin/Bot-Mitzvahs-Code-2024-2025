@@ -46,8 +46,4 @@ public class utilMovmentAuto extends utilMovment{
         }
         return new double[] {step, xi, yi, thetai};
     }
-
-
-
-
 }
