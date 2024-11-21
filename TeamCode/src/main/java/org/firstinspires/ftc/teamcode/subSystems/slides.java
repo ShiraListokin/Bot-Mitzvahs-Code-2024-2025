@@ -34,6 +34,7 @@ public class slides {
     double slideUp = 0;
 
     double[] state;
+    double positionEdit;
 
     public slides(HardwareMap hardwareMap, Telemetry t){
         LeftSlide = hardwareMap.get(DcMotorEx.class, "LSlide");
@@ -56,7 +57,7 @@ public class slides {
     }
 
     public void update(){
-        double power = PID.calculate((RightSlide.getCurrentPosition()/384.5)*33.0*Math.PI-(idealPosition+slideChanger));
+        double power = PID.calculate((RightSlide.getCurrentPosition()/384.5)*33.0*Math.PI-(idealPosition+slideChanger) + positionEdit);
 
 
         telemetry.addData("slide position", (RightSlide.getCurrentPosition()/384.5)*33*Math.PI);
@@ -77,7 +78,7 @@ public class slides {
         LeftSlide.setPower(slidePower);
         RightSlide.setPower(slidePower);
 
-        state[0] = ((RightSlide.getCurrentPosition()/384.5)*33*Math.PI);
+        state[0] = ((RightSlide.getCurrentPosition()/384.5)*33*Math.PI) + positionEdit;
     }
 
     public void slideTo(double i){
@@ -94,6 +95,9 @@ public class slides {
 
         state[1] = idealExtensin;
 
+    }
+    public void setPosition(double p){
+        positionEdit = p;
     }
 
     public void slideChanger(double amount){

@@ -43,7 +43,7 @@ public class cycleAssistYellow {
             movment.moveTo(BASKET);
             Pose2d currentPose = drive.getPoseEstimate();
             double[] distances = distanceNumbers(currentPose, BASKET);
-            double slideToLocation = (20.0-distances[0])*15.0;
+            double slideToLocation = (20.0-distances[0])*20.0;
             if(slideToLocation < 0){
                 slideToLocation = 0;
             }
@@ -79,7 +79,7 @@ public class cycleAssistYellow {
             movment.moveTo(BASKET);
             slide.slideTo(0);
             in.direction(0);
-            if(slide.state()[0] < 300){
+            if(slide.state()[0] < 350){
                 state++;
             }
         }
@@ -88,13 +88,13 @@ public class cycleAssistYellow {
         }
         return false;
     }
-    public boolean cycle(Pose2d yellowSample, Pose2d Basket, double distance){ //starts and ends with slides down at the basket
+    public boolean cycle(Pose2d yellowSample, Pose2d Basket, double distanceY, double distsanceX, double t){ //starts and ends with slides down at the basket
         slide.update();
         in.update();
         drive.update();
         slide.linkageTo(0);
         if(state == 0){ //ready position
-            Pose2d ready = new Pose2d(yellowSample.getX(), yellowSample.getY() + distance, yellowSample.getHeading());
+            Pose2d ready = new Pose2d(yellowSample.getX() - distsanceX, yellowSample.getY() + distanceY, yellowSample.getHeading());
             movment.moveTo(ready);
             Pose2d currentPose = drive.getPoseEstimate();
             slide.slideTo(0);
@@ -109,7 +109,15 @@ public class cycleAssistYellow {
             Pose2d currentPose = drive.getPoseEstimate();
             slide.slideTo(0);
             double[] distances = distanceNumbers(currentPose, yellowSample);
-            if(checkIfInsideBox(distances[1], 0.15, distances[0], 1.0)){
+            if(time == -1){
+                runtime.reset();
+                time = 0;
+            }
+            else{
+                time = runtime.time(TimeUnit.MILLISECONDS);
+            }
+            if(checkIfInsideBox(distances[1], 0.15, distances[0], 1.0) && time > t){
+                time = -1;
                 state++;
             }
         }
@@ -117,7 +125,7 @@ public class cycleAssistYellow {
             movment.moveTo(Basket);
             Pose2d currentPose = drive.getPoseEstimate();
             double[] distances = distanceNumbers(currentPose, Basket);
-            double slideToLocation = (20.0-distances[0])*15.0;
+            double slideToLocation = (20.0-distances[0])*20.0;
             if(slideToLocation < 0){
                 slideToLocation = 0;
             }
