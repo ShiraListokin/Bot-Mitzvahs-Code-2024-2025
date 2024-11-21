@@ -11,23 +11,20 @@ import org.firstinspires.ftc.teamcode.subSystems.utilMovment;
 
 import java.util.concurrent.TimeUnit;
 
-public class cycleAssistYellow {
+public class cycleAssistYellow extends cycleAssist{
 
-    private intake in;
-    private slides slide;
-    private utilMovment movment;
-    private SampleMecanumDrive drive;
+    //States
     private int state;
-    private final Pose2d BASKET = new Pose2d(10, -13, Math.PI/4);
+
+    //Times
     private double time = -1;
-    ElapsedTime runtime;
+
+    //Poses
+    private final Pose2d BASKET = new Pose2d(10, -13, Math.PI/4);
+
     public cycleAssistYellow(intake i, slides s, utilMovment m, SampleMecanumDrive sa, ElapsedTime r){
-        in = i;
-        slide = s;
-        movment = m;
-        drive = sa;
+        super(i, s, m, sa, r);
         state = 0;
-        runtime = r;
     }
     public void reset(){
         state = 0;
@@ -170,40 +167,4 @@ public class cycleAssistYellow {
         }
         return false;
     }
-
-    protected double[] distanceNumbers(Pose2d pi, Pose2d pf){
-        double xi = pi.getX();
-        double yi = pi.getY();
-        double thetai = pi.getHeading();
-
-        double xf = pf.getX();
-        double yf = pf.getY();
-        double thetaf = pf.getHeading();
-
-        double deltaX = xf-xi;
-        double deltaY = yf-yi;
-
-        double angleInBetween = angleBetween(thetaf, thetai);
-        double distance = Math.hypot(deltaX, deltaY);
-        return new double[] {distance, angleInBetween};//distance then angle
-    }
-    protected boolean checkIfInsideBox(double angle, double rotPrec, double dist, double transPrec){
-        return ((angle < rotPrec) && (dist < transPrec));
-    }
-    protected static double angleBetween(double angle1, double angle2) {
-        // Normalize the angles to be within 0 to 2π
-        angle1 = angle1 % (2 * Math.PI);
-        angle2 = angle2 % (2 * Math.PI);
-
-        // Calculate the difference
-        double diff = Math.abs(angle1 - angle2);
-
-        // Ensure the angle is the smallest possible
-        if (diff > Math.PI) {
-            diff = (2 * Math.PI) - diff;
-        }
-
-        return diff;
-    }
-
 }

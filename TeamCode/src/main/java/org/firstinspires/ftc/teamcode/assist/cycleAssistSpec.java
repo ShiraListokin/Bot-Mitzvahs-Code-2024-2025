@@ -11,130 +11,290 @@ import org.firstinspires.ftc.teamcode.subSystems.utilMovment;
 
 import java.util.concurrent.TimeUnit;
 
-public class cycleAssistSpec {
+public class cycleAssistSpec extends cycleAssist{
 
-    private intake in;
-    private slides slide;
-    private utilMovment movment;
-    private SampleMecanumDrive drive;
-    private int state;
-    private final Pose2d PRELOAD = new Pose2d(20, -0.4, 0);
-    private final Pose2d PRELOAD2 = new Pose2d(27, -0.4, 0);
-    private final Pose2d PRELOAD3 = new Pose2d(15, -0.4, 0);
+    //States
+    private int subStatePlace;
+    private int pushState;
+
+    //Time
     private double time = -1;
-    ElapsedTime runtime;
+
+    //Poses:
+
+    //Preload
+    private final Pose2d PRELOAD = new Pose2d(20, -0.4, 0);
+
+    //Push
+    private final Pose2d BOTTOM_LEFT_CORNER_SPEC1 = new Pose2d(0, 0, 0); //TODO fill in
+    private final Pose2d TOP_LEFT_CORNER_SPEC1 = new Pose2d(0, 0, 0); //TODO fill in
+    private final Pose2d TOP_RIGHT_CORNER_SPEC1 = new Pose2d(0, 0, 0); //TODO fill in
+    private final Pose2d OBSERVATION_ZONE_SPEC1 = new Pose2d(0, 0, 0); //TODO fill in
 
     public cycleAssistSpec(intake i, slides s, utilMovment m, SampleMecanumDrive sa, ElapsedTime r) {
-        in = i;
-        slide = s;
-        movment = m;
-        drive = sa;
-        state = 0;
-        runtime = r;
+        super(i, s, m, sa, r);
+        subStatePlace = 0;
+        pushState = 0;
     }
 
-    public void reset() {
-        state = 0;
+    //reset functions
+    public void resetAll() {
         time = -1;
+        subStatePlace = 0;
+        pushState = 0;
     }
-//TODO start at 17mm
 
-    public boolean preLoad() {
+    public void resetPlase(){
+        subStatePlace = 0;
+    }
+
+    public void resetPush(){
+        pushState = 0;
+    }
+
+    protected boolean plaseSpecimin(Pose2d start){
+        //Update
         slide.update();
         in.update();
         drive.update();
-        in.direction(1);
 
-        if (state == 0) { // move to preload
-            movment.moveTo(PRELOAD);
-            Pose2d currentPose = drive.getPoseEstimate();
-            double[] distances = distanceNumbers(currentPose, PRELOAD);
+        Pose2d currentPose = drive.getPoseEstimate();
+
+        if (subStatePlace == 0) { // move to preSet
+
+            //Drive
+            movment.moveTo(start);
+            double[] distances = distanceNumbers(currentPose, start);
+
+            //Slides
             double slideToLocation = 690;
+            slide.slideTo(slideToLocation);
+
+            //Linkage
             slide.linkageTo(0.4);
-            slide.slideTo(slideToLocation);
+
+            //Intake
+            in.direction(1);
+
+            //Check
             if (checkIfInsideBox(distances[1], 0.15, distances[0], 0.5) && slide.state()[0] > 680) {
-                state++;
+                subStatePlace++;
             }
         }
-        if (state == 1) { // move to preload
-            movment.moveTo(PRELOAD2);
+
+        if (subStatePlace == 1) { // move forward
+
+            //Drive
+            Pose2d secondStep = new Pose2d(start.getX() + 7, start.getY(), 0);
+            movment.moveTo(secondStep);
+            double[] distances = distanceNumbers(currentPose, secondStep);
+
+            //Slides
             double slideToLocation = 690;
             slide.slideTo(slideToLocation);
-            Pose2d currentPose = drive.getPoseEstimate();
-            double[] distances = distanceNumbers(currentPose, PRELOAD2);
+
+            //Linkage
+            slide.linkageTo(0.4);
+
+            //Intake
+            in.direction(1);
+
+            //Check
             if (checkIfInsideBox(distances[1], 0.15, distances[0], 0.5) && slide.state()[0] > 680) {
-                state++;
+                subStatePlace++;
             }
         }
-        if(state == 2){
-            movment.moveTo(PRELOAD2);
+
+        if(subStatePlace == 2){ //Move slides down
+
+            //Drive
+            Pose2d secondStep = new Pose2d(start.getX() + 7, start.getY(), 0);
+            movment.moveTo(secondStep);
+            double[] distances = distanceNumbers(currentPose, secondStep);
+
+            //Slides
             double slideToLocation = 640;
             slide.slideTo(slideToLocation);
-            Pose2d currentPose = drive.getPoseEstimate();
-            double[] distances = distanceNumbers(currentPose, PRELOAD2);
+
+            //Linkage
+            slide.linkageTo(0.4);
+
+            //Intake
+            in.direction(1);
+
+            //Check
             if (checkIfInsideBox(distances[1], 0.15, distances[0], 0.5) && slide.state()[0] < 660) {
-                state++;
+                subStatePlace++;
             }
         }
-        if(state == 3){
-            movment.moveTo(PRELOAD3);
+
+        if(subStatePlace == 3){ //Move back
+
+            //Drive
+            Pose2d thirdStep = new Pose2d(start.getX() - 5, start.getY(), 0);
+            movment.moveTo(thirdStep);
+            double[] distances = distanceNumbers(currentPose, thirdStep);
+
+            //SLides
             double slideToLocation = 640;
             slide.slideTo(slideToLocation);
-            Pose2d currentPose = drive.getPoseEstimate();
-            double[] distances = distanceNumbers(currentPose, PRELOAD3);
-            if (checkIfInsideBox(distances[1], 0.15, distances[0], 0.5)) {
-                state++;
-            }
+
+            //Linkage
             slide.linkageTo(0);
-        }
-        if(state == 4){
-            movment.moveTo(PRELOAD3);
-            slide.slideTo(0);
-            Pose2d currentPose = drive.getPoseEstimate();
-            double[] distances = distanceNumbers(currentPose, PRELOAD3);
-            if (checkIfInsideBox(distances[1], 0.15, distances[0], 0.5) && slide.state()[0] < 10) {
-                state++;
+
+            //Intake
+            in.direction(1);
+
+            //Check
+            if (checkIfInsideBox(distances[1], 0.15, distances[0], 0.5)) {
+                subStatePlace++;
             }
         }
-        if(state == 5){
+
+        if(subStatePlace == 4){ //Move Down
+
+            //Drive
+            Pose2d thirdStep = new Pose2d(start.getX() - 5, start.getY(), 0);
+            movment.moveTo(thirdStep);
+            double[] distances = distanceNumbers(currentPose, thirdStep);
+
+            //SLides
+            double slideToLocation = 0;
+            slide.slideTo(slideToLocation);
+
+            //Linkage
+            slide.linkageTo(0);
+
+            //Intake
+            in.direction(0);
+
+            //Check
+            if (checkIfInsideBox(distances[1], 0.15, distances[0], 0.5) && slide.state()[0] < 10) { //TODO change the down requirement to move onto the next state
+                subStatePlace++;
+            }
+        }
+
+        if(subStatePlace == 5){ //finished
             return true;
         }
+
         return false;
     }
 
-    protected double[] distanceNumbers(Pose2d pi, Pose2d pf){
-        double xi = pi.getX();
-        double yi = pi.getY();
-        double thetai = pi.getHeading();
+    public boolean pushSpec(){
+        //Update
+        slide.update();
+        in.update();
+        drive.update();
 
-        double xf = pf.getX();
-        double yf = pf.getY();
-        double thetaf = pf.getHeading();
+        Pose2d currentPose = drive.getPoseEstimate();
 
-        double deltaX = xf-xi;
-        double deltaY = yf-yi;
+        if (pushState == 0) { // Move to bottom left
 
-        double angleInBetween = angleBetween(thetaf, thetai);
-        double distance = Math.hypot(deltaX, deltaY);
-        return new double[] {distance, angleInBetween};//distance then angle
-    }
-    protected boolean checkIfInsideBox(double angle, double rotPrec, double dist, double transPrec){
-        return ((angle < rotPrec) && (dist < transPrec));
-    }
-    protected static double angleBetween(double angle1, double angle2) {
-        // Normalize the angles to be within 0 to 2π
-        angle1 = angle1 % (2 * Math.PI);
-        angle2 = angle2 % (2 * Math.PI);
+            //Drive
+            movment.moveToDSB(BOTTOM_LEFT_CORNER_SPEC1, 0.9);
+            double[] distances = distanceNumbers(currentPose, BOTTOM_LEFT_CORNER_SPEC1);
 
-        // Calculate the difference
-        double diff = Math.abs(angle1 - angle2);
+            //Slides
+            double slideToLocation = 0;
+            slide.slideTo(slideToLocation);
 
-        // Ensure the angle is the smallest possible
-        if (diff > Math.PI) {
-            diff = (2 * Math.PI) - diff;
+            //Linkage
+            slide.linkageTo(0);
+
+            //Intake
+            in.direction(0);
+
+            //Check
+            if (checkIfInsideBox(distances[1], 0.15, distances[0], 2)) {
+                pushState++;
+            }
         }
 
-        return diff;
+        if (pushState == 1) { // Move to top left
+
+            //Drive
+            movment.moveToDSB(TOP_LEFT_CORNER_SPEC1, 0.9);
+            double[] distances = distanceNumbers(currentPose, TOP_LEFT_CORNER_SPEC1);
+
+            //Slides
+            double slideToLocation = 0;
+            slide.slideTo(slideToLocation);
+
+            //Linkage
+            slide.linkageTo(0);
+
+            //Intake
+            in.direction(0);
+
+            //Check
+            if (checkIfInsideBox(distances[1], 0.15, distances[0], 2)) {
+                pushState++;
+            }
+        }
+
+        if (pushState == 2) { // Move to top right
+
+            //Drive
+            movment.moveToDSB(TOP_RIGHT_CORNER_SPEC1, 0.9);
+            double[] distances = distanceNumbers(currentPose, TOP_RIGHT_CORNER_SPEC1);
+
+            //Slides
+            double slideToLocation = 0;
+            slide.slideTo(slideToLocation);
+
+            //Linkage
+            slide.linkageTo(0);
+
+            //Intake
+            in.direction(0);
+
+            //Check
+            if (checkIfInsideBox(distances[1], 0.15, distances[0], 2)) {
+                pushState++;
+            }
+        }
+
+        if (pushState == 3) { // Move to observation zone
+
+            //Drive
+            movment.moveToDSB(OBSERVATION_ZONE_SPEC1, 0.9);
+            double[] distances = distanceNumbers(currentPose, OBSERVATION_ZONE_SPEC1);
+
+            //Slides
+            double slideToLocation = 0;
+            slide.slideTo(slideToLocation);
+
+            //Linkage
+            slide.linkageTo(0);
+
+            //Intake
+            in.direction(0);
+
+            //Check
+            if (checkIfInsideBox(distances[1], 0.15, distances[0], 2)) {
+                pushState++;
+            }
+        }
+
+        if(pushState == 4){
+            return true;
+        }
+
+        return false; //TODO return actual value
     }
 
+    public boolean preLoad() {
+        boolean completed = plaseSpecimin(PRELOAD);
+        return completed;
+    }
+
+    public boolean setUP(){
+
+        return false;
+    }
+
+    public boolean cycle(){
+        return false;
+    }
 }
