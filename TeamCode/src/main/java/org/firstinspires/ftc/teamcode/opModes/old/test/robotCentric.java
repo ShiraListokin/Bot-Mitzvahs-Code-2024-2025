@@ -1,16 +1,15 @@
-package org.firstinspires.ftc.teamcode.opModes.teleOp;
+package org.firstinspires.ftc.teamcode.opModes.old.test;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.subSystems.intake;
-import org.firstinspires.ftc.teamcode.subSystems.slides;
-import org.firstinspires.ftc.teamcode.subSystems.utilMovment;
-import org.firstinspires.ftc.teamcode.subSystems.utilMovmentTeleOp;
+import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
 
 @TeleOp
+@Disabled
 public class robotCentric extends OpMode {
     SampleMecanumDrive drive;
     utilMovment movment;

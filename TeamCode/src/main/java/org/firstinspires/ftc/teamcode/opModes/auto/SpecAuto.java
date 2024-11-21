@@ -10,9 +10,9 @@ import org.firstinspires.ftc.teamcode.assist.cycleAssistSpec;
 
 //SubSystems
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.subSystems.intake;
-import org.firstinspires.ftc.teamcode.subSystems.slides;
-import org.firstinspires.ftc.teamcode.subSystems.utilMovment;
+import org.firstinspires.ftc.teamcode.subSystems.current.intake;
+import org.firstinspires.ftc.teamcode.subSystems.current.slides;
+import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
 @Autonomous(name="SpecAuto")
 public class SpecAuto extends LinearOpMode{

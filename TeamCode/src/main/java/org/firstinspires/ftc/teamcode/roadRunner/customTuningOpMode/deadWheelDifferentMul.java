@@ -3,11 +3,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.roadRunner.util.Encoder;
-import org.firstinspires.ftc.teamcode.subSystems.intake;
-import org.firstinspires.ftc.teamcode.subSystems.slides;
-import org.firstinspires.ftc.teamcode.subSystems.utilMovmentTeleOp;
 
 @TeleOp
 public class deadWheelDifferentMul extends OpMode{

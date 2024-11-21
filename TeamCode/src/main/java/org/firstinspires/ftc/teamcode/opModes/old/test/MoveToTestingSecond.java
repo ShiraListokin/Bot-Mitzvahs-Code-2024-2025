@@ -1,17 +1,14 @@
-package org.firstinspires.ftc.teamcode.opModes.auto;
+package org.firstinspires.ftc.teamcode.opModes.old.test;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.subSystems.objectDetectionUtill;
-import org.firstinspires.ftc.teamcode.subSystems.utilMovment;
+import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
 
 /*
@@ -27,20 +24,39 @@ import org.firstinspires.ftc.teamcode.subSystems.utilMovment;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="ImageRecognition", group="Linear OpMode")
+@TeleOp(name="moveToTestSecond", group="Linear OpMode")
 @Disabled
-public class ImageRecognition extends LinearOpMode{
+public class MoveToTestingSecond extends LinearOpMode {
 
-    private SampleMecanumDrive drive;
-    private utilMovment util;
-    private objectDetectionUtill objUtill;
+    // Declare OpMode members.
+    private ElapsedTime runtime = new ElapsedTime();
 
+    SampleMecanumDrive drive;
+    utilMovment util;
+
+    @Override
     public void runOpMode() {
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
         drive = new SampleMecanumDrive(hardwareMap);
-        objUtill = new objectDetectionUtill(drive, telemetry);
+        drive.setPoseEstimate(new Pose2d(0, 0,0));
+        Pose2d idealPose = new Pose2d(12, 0, 0);
+
+        Trajectory myTrajectory = drive.trajectoryBuilder(new Pose2d())
+                .strafeRight(1)
+                .build();
+
+
         waitForStart();
-        while(opModeIsActive()){
-            objUtill.telemetryUpdate();
+        runtime.reset();
+
+        while (opModeIsActive()) {
+            drive.followTrajectory(myTrajectory);
+            telemetry.addData("thinkX", drive.getPoseEstimate().getX());
+            telemetry.addData("thinkY", drive.getPoseEstimate().getY());
+            telemetry.addData("thinkRot", drive.getPoseEstimate().getHeading());
+            telemetry.update();
         }
     }
 }

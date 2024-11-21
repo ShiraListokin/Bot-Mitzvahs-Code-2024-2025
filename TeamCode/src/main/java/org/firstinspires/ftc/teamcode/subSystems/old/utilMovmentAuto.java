@@ -1,10 +1,11 @@
-package org.firstinspires.ftc.teamcode.subSystems;
+package org.firstinspires.ftc.teamcode.subSystems.old;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
-public class utilMovmentAuto extends utilMovment{
+public class utilMovmentAuto extends utilMovment {
 
     private int step = 0;
     private Pose2d[] currentPoses;

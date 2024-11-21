@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.subSystems.intake;
-import org.firstinspires.ftc.teamcode.subSystems.slides;
-import org.firstinspires.ftc.teamcode.subSystems.utilMovmentTeleOp;
+import org.firstinspires.ftc.teamcode.subSystems.current.intake;
+import org.firstinspires.ftc.teamcode.subSystems.current.slides;
+import org.firstinspires.ftc.teamcode.subSystems.current.utilMovmentTeleOp;
 
 
 @TeleOp
