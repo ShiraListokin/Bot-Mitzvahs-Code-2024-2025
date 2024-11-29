@@ -4,8 +4,8 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.subSystems.current.intake;
-import org.firstinspires.ftc.teamcode.subSystems.current.slides;
+import org.firstinspires.ftc.teamcode.subSystems.current.autoIntake;
+import org.firstinspires.ftc.teamcode.subSystems.current.autoSlides;
 import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
 public class cycleAssistSpec extends cycleAssist{
@@ -41,7 +41,7 @@ public class cycleAssistSpec extends cycleAssist{
     //Park
     private final Pose2d PARK = new Pose2d(4, -43, 0); //TODO fill in
 
-    public cycleAssistSpec(intake i, slides s, utilMovment m, SampleMecanumDrive sa, ElapsedTime r) {
+    public cycleAssistSpec(autoIntake i, autoSlides s, utilMovment m, SampleMecanumDrive sa, ElapsedTime r) {
         super(i, s, m, sa, r);
         placeState = 0;
         pushState = 0;

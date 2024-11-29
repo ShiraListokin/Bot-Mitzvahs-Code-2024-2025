@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.current.intake;
-import org.firstinspires.ftc.teamcode.subSystems.current.slides;
+import org.firstinspires.ftc.teamcode.subSystems.current.teleSlides;
 import org.firstinspires.ftc.teamcode.subSystems.current.utilMovmentTeleOp;
 
 
@@ -16,14 +16,14 @@ public class MainTeleOp extends OpMode {
     utilMovmentTeleOp movment;
 
     intake in;
-    slides slide;
+    teleSlides slide;
 
     @Override
     public void init() {
         drive = new SampleMecanumDrive(hardwareMap);
         movment = new utilMovmentTeleOp(drive, gamepad1, gamepad2);
-        slide = new slides(hardwareMap, telemetry);
-        in = new intake(hardwareMap, telemetry);
+        slide = new teleSlides(hardwareMap, telemetry, gamepad1, gamepad2);
+        in = new intake(hardwareMap, telemetry, gamepad1, gamepad2);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class MainTeleOp extends OpMode {
         movment.robotCentricDriver();
         slide.update();
         in.update();
-        if(gamepad1.dpad_up){
+        /*if(gamepad1.dpad_up){
             slide.slideTo(1125); //high basket
             slide.linkageTo(0);
         }
@@ -63,6 +63,7 @@ public class MainTeleOp extends OpMode {
         }
 
          */
+        /*
         if (gamepad1.left_bumper){
             slide.slideChanger(-4000);
         }
@@ -72,6 +73,8 @@ public class MainTeleOp extends OpMode {
         if(gamepad1.x){
             slide.linkageTo(1);
         }
+    }
+    */
     }
 }
 

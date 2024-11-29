@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.assist.cycleAssistYellow;
 //SubSystems
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.current.intake;
-import org.firstinspires.ftc.teamcode.subSystems.current.slides;
+import org.firstinspires.ftc.teamcode.subSystems.current.teleSlides;
 import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
 import java.util.concurrent.TimeUnit;
@@ -27,14 +27,14 @@ public class YellowAuto extends LinearOpMode {
     private utilMovment util;
 
     private intake in;
-    private slides slide;
+    private teleSlides slide;
 
     private final Pose2d BASKET = new Pose2d(10, -13, Math.PI/4);
 
-    private final Pose2d PRESET1 = new Pose2d(9.6, -38, 3*Math.PI/2);
+    private final Pose2d PRESET1 = new Pose2d(9.5, -38, 3*Math.PI/2);
 
-    private final Pose2d PRESET2 = new Pose2d(19.6, -38, 3*Math.PI/2);
-    final Pose2d PRESET3 = new Pose2d(22, -32.2, (7*Math.PI/4)+0.25);
+    private final Pose2d PRESET2 = new Pose2d(20.2, -38, 3*Math.PI/2);
+    final Pose2d PRESET3 = new Pose2d(22.5, -32, (7*Math.PI/4)+0.25);
 
     private int state = 0;
 
@@ -44,7 +44,7 @@ public class YellowAuto extends LinearOpMode {
         telemetry.update();
 
         in = new intake(hardwareMap, telemetry);
-        slide = new slides(hardwareMap, telemetry);
+        slide = new teleSlides(hardwareMap, telemetry);
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(new Pose2d(0, 0,0));
         util = new utilMovment(drive);
@@ -73,14 +73,14 @@ public class YellowAuto extends LinearOpMode {
                 }
             }
             if(state == 2){
-                boolean moveOn = assist.cycle(PRESET2, new Pose2d(10, -12, Math.PI/4), 15, 0, 0);
+                boolean moveOn = assist.cycle(PRESET2, new Pose2d(10, -12.5, Math.PI/4), 15, 0, 0);
                 if(moveOn){
                     state ++;
                     assist.reset();
                 }
             }
             if(state == 3){
-                boolean moveOn = assist.cycle(PRESET3, new Pose2d(10, -12.25, Math.PI/4), 8, 5, 1500);
+                boolean moveOn = assist.lastCycyle(PRESET3, new Pose2d(10, -12, Math.PI/4), 8, 8, 1500);
                 if(moveOn){
                     state ++;
                     assist.reset();
@@ -89,6 +89,7 @@ public class YellowAuto extends LinearOpMode {
             if(state == 4){
                 slide.slideTo(0);
                 slide.update();
+                slide.killServo();
             }
         }
     }
