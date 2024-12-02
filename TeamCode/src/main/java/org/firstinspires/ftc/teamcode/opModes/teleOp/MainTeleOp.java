@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.subSystems.current.teleIntake;
+import org.firstinspires.ftc.teamcode.subSystems.current.intake;
 import org.firstinspires.ftc.teamcode.subSystems.current.teleSlides;
 import org.firstinspires.ftc.teamcode.subSystems.current.utilMovmentTeleOp;
 
@@ -15,16 +15,15 @@ public class MainTeleOp extends OpMode {
 
     utilMovmentTeleOp movment;
 
-    teleIntake in;
+    intake in;
     teleSlides slide;
-
 
     @Override
     public void init() {
         drive = new SampleMecanumDrive(hardwareMap);
         movment = new utilMovmentTeleOp(drive, gamepad1, gamepad2);
         slide = new teleSlides(hardwareMap, telemetry, gamepad1, gamepad2);
-        in = new teleIntake(hardwareMap, telemetry, gamepad1, gamepad2);
+        in = new intake(hardwareMap, telemetry, gamepad1, gamepad2);
     }
 
     @Override
@@ -32,6 +31,50 @@ public class MainTeleOp extends OpMode {
         movment.robotCentricDriver();
         slide.update();
         in.update();
+        /*if(gamepad1.dpad_up){
+            slide.slideTo(1125); //high basket
+            slide.linkageTo(0);
+        }
+        if(gamepad1.dpad_down){
+            slide.slideTo(0); //rest (will be higher later)
+            slide.linkageTo(0);
+        }
+        if(gamepad1.dpad_left){
+            slide.slideTo(330); //Hang
+        }
+        if(gamepad1.dpad_right){
+            slide.slideTo(650); //chamber
+            slide.linkageTo(0.3);
+        }
+        if (gamepad1.y) {
+            in.direction(-1);
+        }
+        if(gamepad1.a){
+            in.direction(1);
+        }
+        if(gamepad1.b){
+            in.direction(0);
+        }
+        /*if (gamepad1.right_bumper){
+            slide.slideChanger(40);
+        }
+        else{
+            slide.slideChanger(0);
+        }
+
+         */
+        /*
+        if (gamepad1.left_bumper){
+            slide.slideChanger(-4000);
+        }
+        else{
+            slide.slideChanger(0);
+        }
+        if(gamepad1.x){
+            slide.linkageTo(1);
+        }
+    }
+    */
     }
 }
 

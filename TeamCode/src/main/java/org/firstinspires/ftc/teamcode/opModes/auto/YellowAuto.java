@@ -10,8 +10,7 @@ import org.firstinspires.ftc.teamcode.assist.cycleAssistYellow;
 
 //SubSystems
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.subSystems.current.autoIntake;
-import org.firstinspires.ftc.teamcode.subSystems.current.autoSlides;
+import org.firstinspires.ftc.teamcode.subSystems.current.intake;
 import org.firstinspires.ftc.teamcode.subSystems.current.teleSlides;
 import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
@@ -27,8 +26,8 @@ public class YellowAuto extends LinearOpMode {
 
     private utilMovment util;
 
-    private autoIntake in;
-    private autoSlides slide;
+    private intake in;
+    private teleSlides slide;
 
     private final Pose2d BASKET = new Pose2d(10, -13, Math.PI/4);
 
@@ -44,8 +43,8 @@ public class YellowAuto extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        in = new autoIntake(hardwareMap, telemetry);
-        slide = new autoSlides(hardwareMap, telemetry);
+        in = new intake(hardwareMap, telemetry);
+        slide = new teleSlides(hardwareMap, telemetry);
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(new Pose2d(0, 0,0));
         util = new utilMovment(drive);

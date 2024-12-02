@@ -35,17 +35,17 @@ public class teleIntake {
     
     public void update(){
 
-        /*if(gamepad2.dpad_right != helperDepositSpec){
+        if(gamepad2.dpad_right != helperDepositSpec){
             helperDepositSpec = gamepad2.dpad_right;
             amountPressedDeposit ++;
-           // amountPressedDeposit = (amountPressedDeposit / 2.0);
+            amountPressedDeposit = (amountPressedDeposit / 2.0);
         }
         else if(gamepad2.b != helperIntakeSpec){
             helperIntakeSpec = gamepad2.b;
             amountPressedIntake ++;
             amountPressedIntake = amountPressedIntake % 2;
         }
-        */
+
         if(gamepad1.right_bumper){ //only when pushed
             direction(-1);
         }
@@ -58,13 +58,12 @@ public class teleIntake {
         else if(gamepad2.a){ //only when pushed
             direction(1);
         }
-        /*else if(amountPressedIntake == 1){ //stays
+        else if(amountPressedIntake == 1){ //stays
             direction(1);
         }
         else if(amountPressedDeposit == 1){ //stays
             direction(1);
         }
-         */
         else{
             direction(0.0);
         }

@@ -36,7 +36,7 @@ public class teleSlides {
 
     //position varriable
     private double idealPosition; //ideal positions
-    private double slideChanger; //changes the position baced on bumper
+    private double bumperChange; //changes the position baced on bumper
     private double positionEdit; //change the zero position
 
     private double[] state; //state[0] = slidePosition. state[1] = linkagePositiion
@@ -45,8 +45,7 @@ public class teleSlides {
     private ElapsedTime e;
     private double time;
 
-
-    public teleSlides(HardwareMap hardwareMap, Telemetry t, Gamepad gamepadOne, Gamepad gamepadTwo) {
+    public teleSlides(HardwareMap hardwareMap, Telemetry t, Gamepad gamepadOne, Gamepad gamepadTwo){
 
         //time
         e = new ElapsedTime();
@@ -83,45 +82,7 @@ public class teleSlides {
         gamepad2 = gamepadTwo;
     }
 
-    public boolean hang(boolean a) { //TODO change
-        if (gamepad2.left_bumper) { //hang
-            if (time == -1) {
-                e.reset();
-                time = 0;
-            }
-            time = e.time(TimeUnit.MILLISECONDS);
-            if (time < 10000) {
-                setPower(-1);
-                return false; //TODO change
-            } else if (time < 20000) {
-                double percent = (20000.0 - time) / 20000.0;
-                double power = percent * -1.0;
-                setPower(power);
-            }
-        }
-        return a;
-    }
-
-
-    public void update(){
-
-        if(gamepad2.dpad_up){
-            setPosition(1150);//TODO Tune the deposit Position
-            linkageTo(0);
-        }
-        if(gamepad2.dpad_down){
-            setPosition(65);//TODO Tune the rest Position
-            linkageTo(0);
-        }
-        if(gamepad2.dpad_right){
-            setPosition(650);//TODO Tune the rest Position
-            linkageTo(0.3);
-        }
-        if(gamepad2.dpad_left){
-            setPosition(330);//TODO Tune the rest Position
-            linkageTo(0);
-        }
-        /*
+    public boolean hang(boolean){
         if(gamepad2.left_bumper){ //hang
             if(time == -1){
                 e.reset();
@@ -138,9 +99,41 @@ public class teleSlides {
                 setPower(power);
             }
         }
-        */
+    }
 
-        double power = PID.calculate(((RightSlide.getCurrentPosition()/384.5)*33.0*Math.PI)-(idealPosition+slideChanger) + positionEdit);
+    public void update(){
+
+        if(gamepad2.dpad_up){
+            setPosition(1150);//TODO Tune the deposit Position
+        }
+        if(gamepad2.dpad_down){
+            setPosition(65);//TODO Tune the rest Position
+        }
+        if(gamepad2.dpad_down){
+            setPosition(65);//TODO Tune the rest Position
+        }
+        if(gamepad2.dpad_down){
+            setPosition(65);//TODO Tune the rest Position
+        }
+
+        if(gamepad2.left_bumper){ //hang
+            if(time == -1){
+                e.reset();
+                time = 0;
+            }
+            time = e.time(TimeUnit.MILLISECONDS);
+            if(time < 10000){
+                setPower(-1);
+                return;
+            }
+            else if(time < 20000){
+                double percent = (20000.0 - time)/20000.0;
+                double power = percent*-1.0;
+                setPower(power);
+            }
+        }
+
+        double power = PID.calculate((RightSlide.getCurrentPosition()/384.5)*33.0*Math.PI-(idealPosition+slideChanger) + positionEdit);
 
 
         telemetry.addData("slide position", (RightSlide.getCurrentPosition()/384.5)*33*Math.PI);
