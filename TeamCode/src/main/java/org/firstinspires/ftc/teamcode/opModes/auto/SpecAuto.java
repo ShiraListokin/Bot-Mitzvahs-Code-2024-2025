@@ -10,7 +10,8 @@ import org.firstinspires.ftc.teamcode.assist.cycleAssistSpec;
 
 //SubSystems
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.subSystems.current.intake;
+import org.firstinspires.ftc.teamcode.subSystems.current.autoIntake;
+import org.firstinspires.ftc.teamcode.subSystems.current.autoSlides;
 import org.firstinspires.ftc.teamcode.subSystems.current.teleSlides;
 import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
@@ -30,8 +31,8 @@ public class SpecAuto extends LinearOpMode{
     private ElapsedTime runtime = new ElapsedTime();
     private SampleMecanumDrive drive;
     private utilMovment util;
-    private intake in;
-    private teleSlides slide;
+    private autoIntake in;
+    private autoSlides slide;
 
     //State
     private int state = 0;
@@ -43,8 +44,8 @@ public class SpecAuto extends LinearOpMode{
         telemetry.update();
 
         //SubSystems
-        in = new intake(hardwareMap, telemetry);
-        slide = new teleSlides(hardwareMap, telemetry);
+        in = new autoIntake(hardwareMap, telemetry);
+        slide = new autoSlides(hardwareMap, telemetry);
         drive = new SampleMecanumDrive(hardwareMap);
         util = new utilMovment(drive);
 
