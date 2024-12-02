@@ -1,15 +1,21 @@
 package org.firstinspires.ftc.teamcode.subSystems.current;
 
+import static java.lang.Math.*;
+
+import androidx.annotation.NonNull;
+
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
-public class autoSlides {
+public class slides {
 
     DcMotorEx LeftSlide, RightSlide;
 
@@ -23,54 +29,41 @@ public class autoSlides {
 
     double idealPosition;
 
-    double positionEdit;
+    double slideChanger = 0;
+
+    double slideUp = 0;
 
     double[] state;
+    double positionEdit;
 
-    public autoSlides(HardwareMap hardwareMap, Telemetry t){
-
-        //motors
+    public slides(HardwareMap hardwareMap, Telemetry t){
         LeftSlide = hardwareMap.get(DcMotorEx.class, "LSlide");
         RightSlide = hardwareMap.get(DcMotorEx.class, "RSlide");
 
-        //linkage
         rightLinkage = hardwareMap.get(ServoImplEx.class, "RLinkage");
         leftLinkage = hardwareMap.get(ServoImplEx.class, "LLinkage");
 
-        //telemetry
         telemetry = t;
 
-        //encoderReset and reverse motor
         RightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         RightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        LeftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        //PID
+        LeftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
         PID = new PIDController(0.02, 0, 0);
 
-        //current state
         state = new double[2];
         state[0] = 0.0; //slide
         state[1] = 0.0; //linkage
     }
 
-    public void setPosition(double p){
-        positionEdit = p;
-    }
-
-    public double findPosition(){
-        return (RightSlide.getCurrentPosition()/384.5)*33.0*Math.PI + positionEdit;
-    }
-
     public void update(){
-        double power = PID.calculate(findPosition()-(idealPosition));
+        double power = PID.calculate((RightSlide.getCurrentPosition()/384.5)*33.0*Math.PI-(idealPosition+slideChanger) + positionEdit);
 
-        telemetry.addData("slide position", findPosition());
 
-        //gravity
+        telemetry.addData("slide position", (RightSlide.getCurrentPosition()/384.5)*33*Math.PI);
+
         slidePower = 0.3 + power;
 
-        //speed Cap
         if(slidePower > 1.0){
             slidePower = 1.0;
         }
@@ -78,17 +71,14 @@ public class autoSlides {
             slidePower = -1.0;
         }
 
-        //telemetry
         telemetry.addData("slide power", slidePower);
         telemetry.addData("L current draw", LeftSlide.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("R current draw", RightSlide.getCurrent(CurrentUnit.AMPS));
 
-        //setPower
         LeftSlide.setPower(slidePower);
         RightSlide.setPower(slidePower);
 
-        //stateUpdate
-        state[0] = ((RightSlide.getCurrentPosition()/384.5)*33*Math.PI);
+        state[0] = ((RightSlide.getCurrentPosition()/384.5)*33*Math.PI) + positionEdit;
     }
 
     public void slideTo(double i){
@@ -97,23 +87,36 @@ public class autoSlides {
 
     public void linkageTo(double idealExtensin){
 
-        double L = .96-(0.645*idealExtensin);
-        double R = 0+(0.66*idealExtensin);
+        double L = 0.6*idealExtensin;
+        double R = 0.6*idealExtensin;
 
-        leftLinkage.setPosition(L);
-        rightLinkage.setPosition(R);
+        leftLinkage.setPosition(0.15 + L);
+        rightLinkage.setPosition(1 - R);
 
         state[1] = idealExtensin;
+
+    }
+    public void setPosition(double p){
+        positionEdit = p;
+    }
+
+    public void slideChanger(double amount){
+        slideChanger = amount;
     }
 
     public double[] state(){
         return state;
     }
 
-    public void killServo(){
-        leftLinkage.setPwmDisable();
-        leftLinkage.getController().close();
-        rightLinkage.setPwmDisable();
-        rightLinkage.getController().close();
+    public void linkageToEx(double mm){
+        double theta = Math.acos((Math.pow(360,2)-Math.pow(mm,2)-Math.pow(176.725776275,2))/((-2)*mm*176.725776275));
+        linkageTo((theta/Math.PI));
     }
+
+    public void extend(double percent){
+        double hypot = percent*(2+176.725776275);
+        linkageToEx(hypot);
+
+    }
+
 }

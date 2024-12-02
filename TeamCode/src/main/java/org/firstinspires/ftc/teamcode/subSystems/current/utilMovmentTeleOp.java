@@ -3,13 +3,13 @@ package org.firstinspires.ftc.teamcode.subSystems.current;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
 public class utilMovmentTeleOp extends utilMovment {
 
     private Gamepad gamepad1;
 
     private Gamepad gamepad2;
-
     public utilMovmentTeleOp(SampleMecanumDrive drive1, Gamepad gamepadOne, Gamepad gamepadTwo) {
         super(drive1);
         gamepad1 = gamepadOne;

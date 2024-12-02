@@ -10,29 +10,22 @@ import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class autoIntake {
-
+public class intake {
     private CRServoImplEx LIntake, RIntake;
 
     private Telemetry telemetry;
 
-    private double intaking;
-
-    public autoIntake(HardwareMap hardwareMap, Telemetry t){
-        //telemetry
+    double intaking;
+    public intake(HardwareMap hardwareMap, Telemetry t){
         telemetry = t;
-
-        //servos
         LIntake = hardwareMap.get(CRServoImplEx.class, "LIntake");
         RIntake = hardwareMap.get(CRServoImplEx.class, "RIntake");
     }
 
-    //auto
     public void direction(double i){
         intaking = i;
 

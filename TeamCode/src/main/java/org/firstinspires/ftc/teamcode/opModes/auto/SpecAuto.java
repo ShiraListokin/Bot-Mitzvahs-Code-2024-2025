@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.assist.cycleAssistSpec;
 //SubSystems
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.current.intake;
-import org.firstinspires.ftc.teamcode.subSystems.current.teleSlides;
+import org.firstinspires.ftc.teamcode.subSystems.current.slides;
 import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
 @Autonomous(name="SpecAuto")
@@ -31,7 +31,7 @@ public class SpecAuto extends LinearOpMode{
     private SampleMecanumDrive drive;
     private utilMovment util;
     private intake in;
-    private teleSlides slide;
+    private slides slide;
 
     //State
     private int state = 0;
@@ -44,7 +44,7 @@ public class SpecAuto extends LinearOpMode{
 
         //SubSystems
         in = new intake(hardwareMap, telemetry);
-        slide = new teleSlides(hardwareMap, telemetry);
+        slide = new slides(hardwareMap, telemetry);
         drive = new SampleMecanumDrive(hardwareMap);
         util = new utilMovment(drive);
 
@@ -66,21 +66,18 @@ public class SpecAuto extends LinearOpMode{
                     state ++;
                 }
             }
-
             if(state == 1){
                 boolean moveOn = assist.pushSpec();
                 if(moveOn){
                     state ++;
                 }
             }
-
             if(state == 2){
                 boolean moveOn = assist.setUP();
                 if(moveOn){
                     state ++;
                 }
             }
-
             if(state == 3){
                 boolean moveOn = assist.cycle(DEPOSIT_CYCLE1, INTAKE_CYCLE1);
                 if(moveOn){
@@ -88,7 +85,6 @@ public class SpecAuto extends LinearOpMode{
                     assist.resetCycle();
                 }
             }
-
             if(state == 4){
                 boolean moveOn = assist.cycle(DEPOSIT_CYCLE2, INTAKE_CYCLE2);
                 if(moveOn){
@@ -96,7 +92,6 @@ public class SpecAuto extends LinearOpMode{
                     assist.resetCycle();
                 }
             }
-
             if(state == 5){
                 boolean moveOn = assist.cycle(DEPOSIT_CYCLE3, INTAKE_CYCLE2);
                 if(moveOn){
@@ -104,7 +99,6 @@ public class SpecAuto extends LinearOpMode{
                     assist.resetCycle();
                 }
             }
-
             telemetry.addData("state", state);
             if(state == 6){
                 assist.park();
