@@ -6,13 +6,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
+import org.firstinspires.ftc.teamcode.subSystems.current.slides;
 
 
 @TeleOp
-@Disabled
 public class robotCentric extends OpMode {
     SampleMecanumDrive drive;
     utilMovment movment;
+
     @Override
     public void init() {
         drive = new SampleMecanumDrive(hardwareMap);
@@ -21,6 +22,6 @@ public class robotCentric extends OpMode {
 
     @Override
     public void loop() {
-        movment.convertToRobotCentric(0, 0, 0, -1, .2);
+
     }
 }

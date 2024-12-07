@@ -18,13 +18,13 @@ import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 public class SpecAuto extends LinearOpMode{
 
     //Poses
-    private final Pose2d DEPOSIT_CYCLE1 = new Pose2d(20, 3, 0); //TODO fill in
-    private final Pose2d DEPOSIT_CYCLE2 = new Pose2d(21, 6.5, 0); //TODO fill in
-    private final Pose2d DEPOSIT_CYCLE3 = new Pose2d(22, 9, 0); //TODO fill in
+    private final Pose2d DEPOSIT_CYCLE1 = new Pose2d(18.75, 3, 0); //TODO fill in
+    private final Pose2d DEPOSIT_CYCLE2 = new Pose2d(19.5, 6.5, 0); //TODO fill in
+    private final Pose2d DEPOSIT_CYCLE3 = new Pose2d(20.5, 9, 0); //TODO fill in
 
 
-    private final Pose2d INTAKE_CYCLE1 = new Pose2d(0, -40, -Math.PI/2); //TODO fill in
-    private final Pose2d INTAKE_CYCLE2 = new Pose2d(2.5, -40, -Math.PI/2); //TODO fill in
+    private final Pose2d INTAKE_CYCLE1 = new Pose2d(4, -48, -Math.PI/2); //TODO fill in
+    private final Pose2d INTAKE_CYCLE2 = new Pose2d(5, -38, -Math.PI/2); //TODO fill in
 
     //SubSystems
     private ElapsedTime runtime = new ElapsedTime();
@@ -53,12 +53,16 @@ public class SpecAuto extends LinearOpMode{
         slide.setPosition(17);
 
         //util
-        cycleAssistSpec assist = new cycleAssistSpec(in, slide, util, drive, runtime);
+        cycleAssistSpec assist = new cycleAssistSpec(in, slide, util, drive, runtime, telemetry);
 
         waitForStart();
         runtime.reset();
 
         while (opModeIsActive()) {
+            telemetry.addData("X", drive.getPoseEstimate().getX());
+            telemetry.addData("Y", drive.getPoseEstimate().getY());
+            telemetry.addData("Theta", drive.getPoseEstimate().getHeading());
+            telemetry.update();
 
             if(state == 0){
                 boolean moveOn = assist.preLoad();
@@ -67,31 +71,36 @@ public class SpecAuto extends LinearOpMode{
                 }
             }
             if(state == 1){
-                boolean moveOn = assist.pushSpec();
+                boolean moveOn = assist.pushSpec(DEPOSIT_CYCLE1);
                 if(moveOn){
                     state ++;
                 }
             }
             if(state == 2){
-                boolean moveOn = assist.setUP();
+                boolean moveOn = assist.cycle(DEPOSIT_CYCLE2, INTAKE_CYCLE1);
                 if(moveOn){
                     state ++;
                 }
             }
+            /*
             if(state == 3){
-                boolean moveOn = assist.cycle(DEPOSIT_CYCLE1, INTAKE_CYCLE1);
+                boolean moveOn = assist.cycle(DEPOSIT_CYCLE2, INTAKE_CYCLE1);
+                if(moveOn){
+                    state ++;
+                    assist.resetCycle();
+                }
+                }
+             */
+            /*if(state == 4){
+                boolean moveOn = assist.cycle(DEPOSIT_CYCLE3, INTAKE_CYCLE2);
                 if(moveOn){
                     state ++;
                     assist.resetCycle();
                 }
             }
-            if(state == 4){
-                boolean moveOn = assist.cycle(DEPOSIT_CYCLE2, INTAKE_CYCLE2);
-                if(moveOn){
-                    state ++;
-                    assist.resetCycle();
-                }
-            }
+
+             */
+            /*
             if(state == 5){
                 boolean moveOn = assist.cycle(DEPOSIT_CYCLE3, INTAKE_CYCLE2);
                 if(moveOn){
@@ -99,8 +108,9 @@ public class SpecAuto extends LinearOpMode{
                     assist.resetCycle();
                 }
             }
+             */
             telemetry.addData("state", state);
-            if(state == 6){
+            if(state == 3){
                 assist.park();
             }
         }

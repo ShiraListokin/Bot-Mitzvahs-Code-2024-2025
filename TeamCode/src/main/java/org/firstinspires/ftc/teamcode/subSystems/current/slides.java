@@ -87,11 +87,11 @@ public class slides {
 
     public void linkageTo(double idealExtensin){
 
-        double L = 0.6*idealExtensin;
-        double R = 0.6*idealExtensin;
+        double L = .9-(0.645*idealExtensin);
+        double R = 0.07+(0.66*idealExtensin);
 
-        leftLinkage.setPosition(0.15 + L);
-        rightLinkage.setPosition(1 - R);
+        leftLinkage.setPosition(L);
+        rightLinkage.setPosition(R);
 
         state[1] = idealExtensin;
 
@@ -117,6 +117,10 @@ public class slides {
         double hypot = percent*(2+176.725776275);
         linkageToEx(hypot);
 
+    }
+    public void power(double power){
+        LeftSlide.setPower(power);
+        RightSlide.setPower(power);
     }
 
 }

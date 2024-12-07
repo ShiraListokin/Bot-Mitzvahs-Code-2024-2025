@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp
-@Disabled
 public class ServoTesting extends OpMode {
 
     Servo rightLinkage;
@@ -23,13 +22,15 @@ public class ServoTesting extends OpMode {
 
     @Override
     public void loop() {
+
+
         if(gamepad1.y){
-            leftLinkage.setPosition(0.15);
-            rightLinkage.setPosition(1);
+            leftLinkage.setPosition(.96);
+            rightLinkage.setPosition(0);
         }
         if(gamepad1.a){
-            leftLinkage.setPosition(.75);
-            rightLinkage.setPosition(.4);
+            leftLinkage.setPosition(.67);
+            rightLinkage.setPosition(.66);
         }
     }
 }

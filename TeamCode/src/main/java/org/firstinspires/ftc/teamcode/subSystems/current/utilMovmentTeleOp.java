@@ -20,8 +20,8 @@ public class utilMovmentTeleOp extends utilMovment {
     public void robotCentricDriver(){
         double X_Left_Stick = gamepad1.left_stick_x;
         double Y_Left_Stick = -gamepad1.left_stick_y;
-        double X_Right_Stick = gamepad1.right_stick_x;
-        double Y_Right_Stick = -gamepad1.right_stick_y;
+        double Y_Right_Stick = gamepad1.right_stick_x;
+        double X_Right_Stick = -gamepad1.right_stick_y;
 
         //        leftFront.setPower(v);
         //        leftRear.setPower(v1);
@@ -29,10 +29,10 @@ public class utilMovmentTeleOp extends utilMovment {
         //        rightFront.setPower(v3);
 
         double robot_heading = (Math.atan2(Y_Right_Stick, X_Right_Stick)) + Math.PI/4;
-        double speed = Math.hypot(X_Right_Stick, Y_Right_Stick);
+        double speed = Math.hypot(X_Right_Stick, Y_Right_Stick)*1.2;
 
         double rotation = 0.6*X_Left_Stick;
-        drive.setMotorPowers(Math.cos(robot_heading) * speed - rotation, Math.sin(robot_heading) * speed  + rotation, Math.cos(robot_heading) * speed  + rotation, Math.sin(robot_heading) * speed  - rotation);
+        drive.setMotorPowers(Math.cos(robot_heading) * speed + rotation, Math.sin(robot_heading) * speed  + rotation, Math.cos(robot_heading) * speed  - rotation, Math.sin(robot_heading) * speed  - rotation);
     }
     public void feildCentricDrive(){
         double X_Left_Stick = gamepad1.left_stick_x;
