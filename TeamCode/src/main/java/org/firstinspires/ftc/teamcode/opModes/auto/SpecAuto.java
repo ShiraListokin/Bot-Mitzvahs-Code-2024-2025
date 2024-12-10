@@ -18,13 +18,13 @@ import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 public class SpecAuto extends LinearOpMode{
 
     //Poses
-    private final Pose2d DEPOSIT_CYCLE1 = new Pose2d(18.75, 3, 0); //TODO fill in
-    private final Pose2d DEPOSIT_CYCLE2 = new Pose2d(19.5, 6.5, 0); //TODO fill in
+    private final Pose2d DEPOSIT_CYCLE1 = new Pose2d(16.35, 3, 0); //TODO fill in
+    private final Pose2d DEPOSIT_CYCLE2 = new Pose2d(17.5, 6.5, 0); //TODO fill in
     private final Pose2d DEPOSIT_CYCLE3 = new Pose2d(20.5, 9, 0); //TODO fill in
 
 
-    private final Pose2d INTAKE_CYCLE1 = new Pose2d(4, -48, -Math.PI/2); //TODO fill in
-    private final Pose2d INTAKE_CYCLE2 = new Pose2d(5, -38, -Math.PI/2); //TODO fill in
+    private final Pose2d INTAKE_CYCLE1 = new Pose2d(4, -38, -Math.PI/2); //TODO fill in
+    private final Pose2d INTAKE_CYCLE2 = new Pose2d(5.25, -34, -Math.PI/2); //TODO fill in
 
     //SubSystems
     private ElapsedTime runtime = new ElapsedTime();
@@ -71,13 +71,13 @@ public class SpecAuto extends LinearOpMode{
                 }
             }
             if(state == 1){
-                boolean moveOn = assist.pushSpec(DEPOSIT_CYCLE1);
+                boolean moveOn = assist.pushSpec(DEPOSIT_CYCLE1, 770);
                 if(moveOn){
                     state ++;
                 }
             }
             if(state == 2){
-                boolean moveOn = assist.cycle(DEPOSIT_CYCLE2, INTAKE_CYCLE1);
+                boolean moveOn = assist.cycle(DEPOSIT_CYCLE2, INTAKE_CYCLE1, 785);
                 if(moveOn){
                     state ++;
                 }

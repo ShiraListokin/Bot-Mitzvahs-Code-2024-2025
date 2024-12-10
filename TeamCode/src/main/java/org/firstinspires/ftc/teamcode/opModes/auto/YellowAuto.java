@@ -80,7 +80,7 @@ public class YellowAuto extends LinearOpMode {
                 }
             }
             if(state == 3){
-                boolean moveOn = assist.cycle(PRESET3, new Pose2d(10, -12.25, Math.PI/4), 8, 5, 1500);
+                boolean moveOn = assist.cycle(PRESET3, new Pose2d(10, -12.25, Math.PI/4), 5, 3, 2000);
                 if(moveOn){
                     state ++;
                     assist.reset();

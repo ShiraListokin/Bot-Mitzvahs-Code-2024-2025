@@ -112,7 +112,7 @@ public class cycleAssistYellow extends cycleAssist{
             else{
                 time = runtime.time(TimeUnit.MILLISECONDS);
             }
-            if(checkIfInsideBox(distances[1], 0.15, distances[0], 1.0) && time > t){
+            if(checkIfInsideBox(distances[1], 0.15, distances[0], 2.0) && time > t){
                 time = -1;
                 state++;
             }

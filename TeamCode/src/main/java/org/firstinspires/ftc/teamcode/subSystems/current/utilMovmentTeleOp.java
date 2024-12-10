@@ -8,12 +8,14 @@ import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 public class utilMovmentTeleOp extends utilMovment {
 
     private Gamepad gamepad1;
+    private double sence;
 
     private Gamepad gamepad2;
     public utilMovmentTeleOp(SampleMecanumDrive drive1, Gamepad gamepadOne, Gamepad gamepadTwo) {
         super(drive1);
         gamepad1 = gamepadOne;
         gamepad2 = gamepadTwo;
+        sence = 1.0;
     }
     double idealAngle;
 
@@ -29,11 +31,16 @@ public class utilMovmentTeleOp extends utilMovment {
         //        rightFront.setPower(v3);
 
         double robot_heading = (Math.atan2(Y_Right_Stick, X_Right_Stick)) + Math.PI/4;
-        double speed = Math.hypot(X_Right_Stick, Y_Right_Stick)*1.2;
+        double speed = Math.hypot(X_Right_Stick, Y_Right_Stick)*1.2*sence;
 
-        double rotation = 0.6*X_Left_Stick;
+        double rotation = 0.6*X_Left_Stick*sence;
         drive.setMotorPowers(Math.cos(robot_heading) * speed + rotation, Math.sin(robot_heading) * speed  + rotation, Math.cos(robot_heading) * speed  - rotation, Math.sin(robot_heading) * speed  - rotation);
     }
+
+    public void setSens(double s){
+        sence = s;
+    }
+
     public void feildCentricDrive(){
         double X_Left_Stick = gamepad1.left_stick_x;
         double Y_Left_Stick = -gamepad1.left_stick_y;

@@ -22,6 +22,9 @@ public class MainTeleOp extends OpMode {
     private intake in;
     private slides slide;
     private ElapsedTime timer;
+    private long time;
+
+    private boolean down;
 
     @Override
     public void init() {
@@ -36,7 +39,8 @@ public class MainTeleOp extends OpMode {
 
     @Override
     public void loop() {
-        if(gamepad1.y){
+        telemetry.addData("Time", time);
+        if(gamepad1.a){
             hang = false;
         }
         if(hang == true){
@@ -79,16 +83,21 @@ public class MainTeleOp extends OpMode {
                 slide.slideChanger(0);
             }
 
+
             //extend
             if (gamepad1.right_trigger > 0.5) {
                 slide.linkageTo(1);
                 slide.slideTo(240);
                 out = true;
+                movment.setSens(0.6);
+                down = false;
             }
             if (gamepad1.left_trigger > 0.5) {
                 slide.linkageTo(0);
                 slide.slideTo(200);
                 out = false;
+                movment.setSens(1);
+                down = false;
             }
 
             if (gamepad1.dpad_up) {
@@ -96,31 +105,46 @@ public class MainTeleOp extends OpMode {
                 slide.linkageTo(0);
                 slide.slideChanger(0);
                 out = false;
+                movment.setSens(0.6);
+                down = false;
             }
             if (gamepad1.dpad_down) {
                 slide.slideTo(0); //rest
                 slide.linkageTo(0);
                 slide.slideChanger(0);
                 out = false;
+                movment.setSens(1);
+                time = System.currentTimeMillis();
+                down = true;
             }
             if (gamepad1.dpad_left) {
                 slide.slideTo(330); //Hang
                 slide.linkageTo(0);
                 slide.slideChanger(0);
                 out = false;
+                movment.setSens(1);
+                down = false;
             }
             if (gamepad1.dpad_right) {
                 slide.slideTo(705); //chamber is at 650
                 slide.linkageTo(0.3);
                 slide.slideChanger(0);
                 out = true;
+                movment.setSens(0.8);
+                down = false;
             }
 
-            if (gamepad1.a) {
+            if (gamepad1.y) {
                 timer.reset();
                 hang = true;
             }
         }
+
+        if(down && (System.currentTimeMillis()-time) > 1000){
+            slide.reset();
+            slide.power(-0.3);
+        }
+
     }
 }
 

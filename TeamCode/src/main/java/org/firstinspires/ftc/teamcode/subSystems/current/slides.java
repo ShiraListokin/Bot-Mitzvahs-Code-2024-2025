@@ -100,6 +100,11 @@ public class slides {
         positionEdit = p;
     }
 
+    public void reset(){
+        RightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
     public void slideChanger(double amount){
         slideChanger = amount;
     }
