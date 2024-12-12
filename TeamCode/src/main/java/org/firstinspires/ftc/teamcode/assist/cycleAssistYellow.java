@@ -84,7 +84,7 @@ public class cycleAssistYellow extends cycleAssist{
         }
         return false;
     }
-    public boolean cycle(Pose2d yellowSample, Pose2d Basket, double distanceY, double distsanceX, double t){ //starts and ends with slides down at the basket
+    public boolean cycle(Pose2d yellowSample, Pose2d Basket, double distanceY, double distsanceX, double t, double X2, double Y2, double t2){ //starts and ends with slides down at the basket
         slide.update();
         in.update();
         drive.update();
@@ -97,6 +97,7 @@ public class cycleAssistYellow extends cycleAssist{
             double[] distances = distanceNumbers(currentPose, ready);
             if(checkIfInsideBox(distances[1], 0.15, distances[0], 1.0)){
                 state++;
+
             }
         }
         if(state == 1){ //intaking
@@ -112,12 +113,32 @@ public class cycleAssistYellow extends cycleAssist{
             else{
                 time = runtime.time(TimeUnit.MILLISECONDS);
             }
-            if(checkIfInsideBox(distances[1], 0.15, distances[0], 2.0) && time > t){
+            if(checkIfInsideBox(distances[1], 0.15, distances[0], 2.0) || time > t){
                 time = -1;
                 state++;
             }
         }
-        if(state == 2){ //moving to basket
+        if(state == 2){ //intaking2
+            Pose2d intake2 = new Pose2d(yellowSample.getX() - X2, yellowSample.getY() - Y2, yellowSample.getHeading());
+            in.direction(1);
+            movment.moveTo(yellowSample, 0.5);
+            Pose2d currentPose = drive.getPoseEstimate();
+            slide.slideTo(0);
+            double[] distances = distanceNumbers(currentPose, yellowSample);
+            if(time == -1){
+                runtime.reset();
+                time = 0;
+            }
+            else{
+                time = runtime.time(TimeUnit.MILLISECONDS);
+            }
+            if(checkIfInsideBox(distances[1], 0.15, distances[0], 2.0) || time > t2){
+                time = -1;
+                state++;
+            }
+        }
+
+        if(state == 3){ //moving to basket
             movment.moveTo(Basket);
             Pose2d currentPose = drive.getPoseEstimate();
             double[] distances = distanceNumbers(currentPose, Basket);
@@ -130,7 +151,7 @@ public class cycleAssistYellow extends cycleAssist{
                 state++;
             }
         }
-        if(state == 3){ //sliding
+        if(state == 4){ //sliding
             movment.moveTo(Basket);
             slide.slideTo(1150.0);
             in.direction(0);
@@ -138,7 +159,7 @@ public class cycleAssistYellow extends cycleAssist{
                 state++;
             }
         }
-        if(state == 4){ //depositing
+        if(state == 5){ //depositing
             movment.moveTo(Basket);
             slide.slideTo(1150.0);
             in.direction(-1);
@@ -153,7 +174,7 @@ public class cycleAssistYellow extends cycleAssist{
                 state ++;
             }
         }
-        if(state == 5){ //go back down
+        if(state == 6){ //go back down
             movment.moveTo(Basket);
             slide.slideTo(0);
             in.direction(0);
@@ -161,7 +182,7 @@ public class cycleAssistYellow extends cycleAssist{
                 state++;
             }
         }
-        if(state == 6){
+        if(state == 7){
             return true;
         }
         return false;

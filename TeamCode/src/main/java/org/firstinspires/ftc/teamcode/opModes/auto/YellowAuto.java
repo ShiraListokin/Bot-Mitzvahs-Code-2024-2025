@@ -34,7 +34,8 @@ public class YellowAuto extends LinearOpMode {
     private final Pose2d PRESET1 = new Pose2d(9.6, -38, 3*Math.PI/2);
 
     private final Pose2d PRESET2 = new Pose2d(19.6, -38, 3*Math.PI/2);
-    final Pose2d PRESET3 = new Pose2d(22, -32.2, (7*Math.PI/4)+0.25);
+
+    private final Pose2d PRESET3 = new Pose2d(22, -32.2, (7*Math.PI/4)+0.25);
 
     private int state = 0;
 
@@ -66,21 +67,21 @@ public class YellowAuto extends LinearOpMode {
                 }
             }
             if(state == 1){
-                boolean moveOn = assist.cycle(PRESET1, BASKET, 15, 0, 0);
+                boolean moveOn = assist.cycle(PRESET1, BASKET, 15, 0, 2500, 0, 0, -1);
                 if(moveOn){
                     state ++;
                     assist.reset();
                 }
             }
             if(state == 2){
-                boolean moveOn = assist.cycle(PRESET2, new Pose2d(10, -12, Math.PI/4), 15, 0, 0);
+                boolean moveOn = assist.cycle(PRESET2, new Pose2d(10, -12, Math.PI/4), 15, 0, 2500, 0, 0, -1);
                 if(moveOn){
                     state ++;
                     assist.reset();
                 }
             }
             if(state == 3){
-                boolean moveOn = assist.cycle(PRESET3, new Pose2d(10, -12.25, Math.PI/4), 5, 3, 2000);
+                boolean moveOn = assist.cycle(PRESET3, new Pose2d(10, -12.25, Math.PI/4), 5, 3, 2000, 0.5, 4, 1500);
                 if(moveOn){
                     state ++;
                     assist.reset();

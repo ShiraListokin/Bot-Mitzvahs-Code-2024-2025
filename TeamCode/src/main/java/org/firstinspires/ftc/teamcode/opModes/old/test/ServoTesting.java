@@ -25,11 +25,11 @@ public class ServoTesting extends OpMode {
 
 
         if(gamepad1.y){
-            leftLinkage.setPosition(.96);
+            leftLinkage.setPosition(0.93);
             rightLinkage.setPosition(0);
         }
         if(gamepad1.a){
-            leftLinkage.setPosition(.67);
+            leftLinkage.setPosition(.33);
             rightLinkage.setPosition(.66);
         }
     }

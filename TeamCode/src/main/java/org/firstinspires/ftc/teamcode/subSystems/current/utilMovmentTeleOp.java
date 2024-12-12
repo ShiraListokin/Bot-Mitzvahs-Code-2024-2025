@@ -22,7 +22,7 @@ public class utilMovmentTeleOp extends utilMovment {
     public void robotCentricDriver(){
         double X_Left_Stick = gamepad1.left_stick_x;
         double Y_Left_Stick = -gamepad1.left_stick_y;
-        double Y_Right_Stick = gamepad1.right_stick_x;
+        double Y_Right_Stick = -gamepad1.right_stick_x;
         double X_Right_Stick = -gamepad1.right_stick_y;
 
         //        leftFront.setPower(v);

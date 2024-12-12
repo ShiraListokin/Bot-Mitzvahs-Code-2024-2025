@@ -35,6 +35,7 @@ public class slides {
 
     double[] state;
     double positionEdit;
+    double linkage;
 
     public slides(HardwareMap hardwareMap, Telemetry t){
         LeftSlide = hardwareMap.get(DcMotorEx.class, "LSlide");
@@ -79,16 +80,17 @@ public class slides {
         RightSlide.setPower(slidePower);
 
         state[0] = ((RightSlide.getCurrentPosition()/384.5)*33*Math.PI) + positionEdit;
+
+        //Linkage
     }
 
     public void slideTo(double i){
         idealPosition = i;
     }
 
-    public void linkageTo(double idealExtensin){
-
-        double L = .9-(0.645*idealExtensin);
-        double R = 0.07+(0.66*idealExtensin);
+    public void linkageTo(double idealExtensin) {
+        double L = .93-(0.65*idealExtensin);
+        double R = 0.00+(0.68*idealExtensin);
 
         leftLinkage.setPosition(L);
         rightLinkage.setPosition(R);
@@ -96,6 +98,7 @@ public class slides {
         state[1] = idealExtensin;
 
     }
+
     public void setPosition(double p){
         positionEdit = p;
     }

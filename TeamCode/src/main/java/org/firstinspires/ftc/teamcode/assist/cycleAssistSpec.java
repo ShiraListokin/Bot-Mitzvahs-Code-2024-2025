@@ -26,21 +26,23 @@ public class cycleAssistSpec extends cycleAssist{
     //Poses:
 
     //Preload
-    private final Pose2d PRELOAD = new Pose2d(18.4, -0.4, 0);
+    private final Pose2d PRELOAD = new Pose2d(19.15, -0.4, 0);
 
     //Push
     private final Pose2d BOTTOM_LEFT_CORNER_SPEC1 = new Pose2d(27, -29, 0); //TODO fill in
     private final Pose2d TOP_LEFT_CORNER_SPEC1 = new Pose2d(46, -30, 0); //TODO fill in
     private final Pose2d TOP_MIDDLE_CORNER_SPEC1 = new Pose2d(46, -42, 0); //TODO fill in
-    private final Pose2d OBSERVATION_ZONE_SPEC1 = new Pose2d(14, -42, 0); //TODO fill in
-    private final Pose2d IntakeSet = new Pose2d(30, -41.5, Math.PI); //TODO fill in
+    private final Pose2d TOP_RIGHT_CORNER_SPEC1 = new Pose2d(46, -52, 0); //TODO fill in
+    private final Pose2d OBSERVATION_ZONE_SPEC1 = new Pose2d(12, -42, 0); //TODO fill in
+    private final Pose2d OBSERVATION_ZONE_SPEC2 = new Pose2d(12, -52, 0); //TODO fill in
+    private final Pose2d IntakeSet = new Pose2d(15, -41.5, Math.PI); //TODO fill in
     private final Pose2d INTAKE2 = new Pose2d(5, -41.5, Math.PI); //TODO fill in
     private final Pose2d DEPOSIT2 = new Pose2d(20.5, 0, 0);
 
     //Set up
     private final Pose2d TOP_RIGHT_CORNER_SET_UP = new Pose2d(20, -44, -Math.PI/6); //TODO fill in
     private final Pose2d TOP_LEFT_CORNER_SET_UP = new Pose2d(20, -25, -Math.PI/3); //TODO fill in
-    private final Pose2d BOTTOM_LEFT_CORNER_SET_UP = new Pose2d(4, -10, -Math.PI/2); //TODO fill in
+    private final Pose2d BOTTOM_LEFT_CORNER_SET_UP = new Pose2d(3, -28, -Math.PI/2); //TODO fill in
 
     //Set up 2
 
@@ -108,6 +110,7 @@ public class cycleAssistSpec extends cycleAssist{
             //Check
             if (checkIfInsideBox(distances[1], .5, distances[0], 1.5) && slide.state()[0] > hight-8) {
                 placeState++;
+                runtime.reset();
             }
         }
 
@@ -129,20 +132,21 @@ public class cycleAssistSpec extends cycleAssist{
             in.direction(1);
 
             //Check
-            if (checkIfInsideBox(distances[1], .25, distances[0], 1) && slide.state()[0] > hight-8) {
+            if ((checkIfInsideBox(distances[1], .25, distances[0], 1) && slide.state()[0] > hight-8) || runtime.time() > 1) {
                 placeState++;
+                runtime.reset();
             }
         }
 
         if(placeState == 2){ //Move slides down
 
             //Drive
-            Pose2d secondStep = new Pose2d(start.getX() + 7, start.getY(), 0);
+            Pose2d secondStep = new Pose2d(start.getX() + 10, start.getY(), 0);
             movment.moveTo(secondStep, 0.5);
             double[] distances = distanceNumbers(currentPose, secondStep);
 
             //Slides
-            double slideToLocation = hight-80;
+            double slideToLocation = hight-82;
             slide.slideTo(slideToLocation);
 
             //Linkage
@@ -152,12 +156,35 @@ public class cycleAssistSpec extends cycleAssist{
             in.direction(1);
 
             //Check
-            if (checkIfInsideBox(distances[1], 0.3, distances[0], 1.5) && slide.state()[0] < hight-70) {
+            if ((checkIfInsideBox(distances[1], 0.3, distances[0], 1.5) && slide.state()[0] < hight-70)|| runtime.time() > 1.5) {
+                placeState++;
+            }
+        }
+        if(placeState == 3){ //Move back
+
+            //Drive
+            Pose2d thirdStep = new Pose2d(start.getX() - 1, start.getY(), 0);
+            movment.moveToDSB(thirdStep, 0.8);
+            double[] distances = distanceNumbers(currentPose, thirdStep);
+
+            //Slides
+            double slideToLocation = hight-82;
+            slide.slideTo(slideToLocation);
+
+            //Linkage
+            slide.linkageTo(0);
+
+            //Intake
+            in.direction(1);
+
+            //Check
+            if (checkIfInsideBox(distances[1], 0.3, distances[0], 1.5)) {
                 placeState++;
             }
         }
 
-        if(placeState == 3){ //Move back
+
+        if(placeState == 4){ //Move back
 
             //Drive
             Pose2d thirdStep = new Pose2d(start.getX() - 5, start.getY(), 0);
@@ -165,7 +192,7 @@ public class cycleAssistSpec extends cycleAssist{
             double[] distances = distanceNumbers(currentPose, thirdStep);
 
             //Slides
-            double slideToLocation = hight-80;
+            double slideToLocation = hight-73;
             slide.slideTo(slideToLocation);
 
             //Linkage
@@ -180,7 +207,7 @@ public class cycleAssistSpec extends cycleAssist{
             }
         }
 
-        if(placeState == 4){ //finished
+        if(placeState == 5){ //finished
             placeState = 0;
             return true;
         }
@@ -210,7 +237,7 @@ public class cycleAssistSpec extends cycleAssist{
             slide.linkageTo(0);
 
             //Intake
-            in.direction(0);
+            in.direction(-1);
 
             //Check
             if (checkIfInsideBox(distances[1], 0.15, distances[0], 4)) {
@@ -283,8 +310,75 @@ public class cycleAssistSpec extends cycleAssist{
                 pushState++;
             }
         }
+        //TODO start
 
-        if (pushState == 4) { // Move Back
+        if (pushState == 4) { // Move back up
+
+            //Drive
+            movment.moveTo(TOP_MIDDLE_CORNER_SPEC1, 1);
+            double[] distances = distanceNumbers(currentPose, TOP_MIDDLE_CORNER_SPEC1);
+
+            //Slides
+            double slideToLocation = 0;
+            slide.slideTo(slideToLocation);
+
+            //Linkage
+            slide.linkageTo(0);
+
+            //Intake
+            in.direction(0);
+
+            //Check
+            if (checkIfInsideBox(distances[1], 0.15, distances[0], 4)) {
+                pushState++;
+            }
+        }
+        if (pushState == 5) { // Move to the right
+
+            //Drive
+            movment.moveTo(TOP_RIGHT_CORNER_SPEC1, 1);
+            double[] distances = distanceNumbers(currentPose, TOP_RIGHT_CORNER_SPEC1);
+
+            //Slides
+            double slideToLocation = 0;
+            slide.slideTo(slideToLocation);
+
+            //Linkage
+            slide.linkageTo(0);
+
+            //Intake
+            in.direction(0);
+
+            //Check
+            if (checkIfInsideBox(distances[1], 0.15, distances[0], 4)) {
+                pushState++;
+            }
+        }
+
+        if (pushState == 6) { // Move to observation zone
+
+            //Drive
+            movment.moveTo(OBSERVATION_ZONE_SPEC2, 1);
+            double[] distances = distanceNumbers(currentPose, OBSERVATION_ZONE_SPEC2);
+
+            //Slides
+            double slideToLocation = 0;
+            slide.slideTo(slideToLocation);
+
+            //Linkage
+            slide.linkageTo(0);
+
+            //Intake
+            in.direction(0);
+
+            //Check
+            if (checkIfInsideBox(distances[1], 0.15, distances[0], 4)) {
+                pushState++;
+            }
+        }
+        //TODO finish
+
+        if (pushState == 7) { // Move Back
 
             //Drive
             movment.moveTo(IntakeSet, 0.7);
@@ -386,7 +480,7 @@ public class cycleAssistSpec extends cycleAssist{
     }
 
     public boolean preLoad() {
-        boolean completed = plaseSpecimin(PRELOAD, 750);
+        boolean completed = plaseSpecimin(PRELOAD, 720.5);
         return completed;
     }
     /*
