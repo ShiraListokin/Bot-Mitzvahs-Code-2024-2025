@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.subSystems.current.intake;
 import org.firstinspires.ftc.teamcode.subSystems.current.slides;
 import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
-public class cycleAssistSpec extends cycleAssist{
+public class cycleAssistSpecOld extends cycleAssist{
 
     //Telemetry
     private Telemetry telemetry;
@@ -35,21 +35,21 @@ public class cycleAssistSpec extends cycleAssist{
     private final Pose2d TOP_RIGHT_CORNER_SPEC1 = new Pose2d(46, -52, 0); //TODO fill in
     private final Pose2d OBSERVATION_ZONE_SPEC1 = new Pose2d(12, -42, 0); //TODO fill in
     private final Pose2d OBSERVATION_ZONE_SPEC2 = new Pose2d(12, -52, 0); //TODO fill in
-    private final Pose2d IntakeSet = new Pose2d(30, -41.5, Math.PI); //TODO fill in
+    private final Pose2d IntakeSet = new Pose2d(15, -41.5, Math.PI); //TODO fill in
     private final Pose2d INTAKE2 = new Pose2d(5, -41.5, Math.PI); //TODO fill in
     private final Pose2d DEPOSIT2 = new Pose2d(20.5, 0, 0);
 
     //Set up
     private final Pose2d TOP_RIGHT_CORNER_SET_UP = new Pose2d(20, -44, -Math.PI/6); //TODO fill in
     private final Pose2d TOP_LEFT_CORNER_SET_UP = new Pose2d(20, -25, -Math.PI/3); //TODO fill in
-    private final Pose2d BOTTOM_LEFT_CORNER_SET_UP = new Pose2d(3, -10, -Math.PI/2); //TODO fill in
+    private final Pose2d BOTTOM_LEFT_CORNER_SET_UP = new Pose2d(3, -28, -Math.PI/2); //TODO fill in
 
     //Set up 2
 
     //Park
     private final Pose2d PARK = new Pose2d(8, -38, 0); //TODO fill in
 
-    public cycleAssistSpec(intake i, slides s, utilMovment m, SampleMecanumDrive sa, ElapsedTime r, Telemetry t) {
+    public cycleAssistSpecOld(intake i, slides s, utilMovment m, SampleMecanumDrive sa, ElapsedTime r, Telemetry t) {
         super(i, s, m, sa, r);
         placeState = 0;
         pushState = 0;
@@ -141,12 +141,12 @@ public class cycleAssistSpec extends cycleAssist{
         if(placeState == 2){ //Move slides down
 
             //Drive
-            Pose2d secondStep = new Pose2d(start.getX() + 10.4, start.getY(), 0);
+            Pose2d secondStep = new Pose2d(start.getX() + 10, start.getY(), 0);
             movment.moveTo(secondStep, 0.5);
             double[] distances = distanceNumbers(currentPose, secondStep);
 
             //Slides
-            double slideToLocation = hight-87.25;
+            double slideToLocation = hight-82;
             slide.slideTo(slideToLocation);
 
             //Linkage
@@ -310,8 +310,75 @@ public class cycleAssistSpec extends cycleAssist{
                 pushState++;
             }
         }
+        //TODO start
 
-        if (pushState == 4) { // Move Back
+        if (pushState == 4) { // Move back up
+
+            //Drive
+            movment.moveTo(TOP_MIDDLE_CORNER_SPEC1, 1);
+            double[] distances = distanceNumbers(currentPose, TOP_MIDDLE_CORNER_SPEC1);
+
+            //Slides
+            double slideToLocation = 0;
+            slide.slideTo(slideToLocation);
+
+            //Linkage
+            slide.linkageTo(0);
+
+            //Intake
+            in.direction(0);
+
+            //Check
+            if (checkIfInsideBox(distances[1], 0.15, distances[0], 4)) {
+                pushState++;
+            }
+        }
+        if (pushState == 5) { // Move to the right
+
+            //Drive
+            movment.moveTo(TOP_RIGHT_CORNER_SPEC1, 1);
+            double[] distances = distanceNumbers(currentPose, TOP_RIGHT_CORNER_SPEC1);
+
+            //Slides
+            double slideToLocation = 0;
+            slide.slideTo(slideToLocation);
+
+            //Linkage
+            slide.linkageTo(0);
+
+            //Intake
+            in.direction(0);
+
+            //Check
+            if (checkIfInsideBox(distances[1], 0.15, distances[0], 4)) {
+                pushState++;
+            }
+        }
+
+        if (pushState == 6) { // Move to observation zone
+
+            //Drive
+            movment.moveTo(OBSERVATION_ZONE_SPEC2, 1);
+            double[] distances = distanceNumbers(currentPose, OBSERVATION_ZONE_SPEC2);
+
+            //Slides
+            double slideToLocation = 0;
+            slide.slideTo(slideToLocation);
+
+            //Linkage
+            slide.linkageTo(0);
+
+            //Intake
+            in.direction(0);
+
+            //Check
+            if (checkIfInsideBox(distances[1], 0.15, distances[0], 4)) {
+                pushState++;
+            }
+        }
+        //TODO finish
+
+        if (pushState == 7) { // Move Back
 
             //Drive
             movment.moveTo(IntakeSet, 0.7);

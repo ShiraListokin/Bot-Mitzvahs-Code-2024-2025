@@ -59,7 +59,8 @@ public class MainTeleOp extends OpMode {
 
             //Update
             if(gamepad1.b){
-                drive.setMotorPowers(0.4, 0.4, 0.4, 0.4);
+                double turn = gamepad1.left_stick_x*0.4;
+                drive.setMotorPowers(0.28 + turn, 0.28 + turn, 0.28 - turn, 0.28 - turn);
                 slide.slideTo(0);
                 slide.linkageTo(0);
                 in.direction(1);

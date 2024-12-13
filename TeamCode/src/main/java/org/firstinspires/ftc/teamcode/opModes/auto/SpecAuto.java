@@ -18,8 +18,8 @@ import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 public class SpecAuto extends LinearOpMode{
 
     //Poses
-    private final Pose2d DEPOSIT_CYCLE1 = new Pose2d(16.9, 3, 0); //TODO fill in
-    private final Pose2d DEPOSIT_CYCLE2 = new Pose2d(17.6, 6.5, 0); //TODO fill in
+    private final Pose2d DEPOSIT_CYCLE1 = new Pose2d(16.3, 3, 0); //TODO fill in
+    private final Pose2d DEPOSIT_CYCLE2 = new Pose2d(17.3, 6.5, 0); //TODO fill in
     private final Pose2d DEPOSIT_CYCLE3 = new Pose2d(20.5, 9, 0); //TODO fill in
 
 
