@@ -89,7 +89,7 @@ public class MainTeleOp extends OpMode {
                 }
             }
             else {
-                in.direction(0.1);
+                in.direction(1);
                 slide.slideChanger(0);
                 movment.setSens(1.0);
             }
@@ -137,7 +137,7 @@ public class MainTeleOp extends OpMode {
                 down = false;
             }
             if (gamepad1.dpad_right) {
-                slide.slideTo(690); //chamber is at 650
+                slide.slideTo(705); //chamber is at 650
                 slide.linkageTo(0.3);
                 slide.slideChanger(0);
                 out = true;
@@ -151,11 +151,10 @@ public class MainTeleOp extends OpMode {
             }
         }
 
-        if(down && (System.currentTimeMillis()-time) > 1400){
+        if(down && gamepad1.x){
+            slide.power(-0.7);
             slide.reset();
-            slide.power(-0.3);
         }
-
     }
 }
 
