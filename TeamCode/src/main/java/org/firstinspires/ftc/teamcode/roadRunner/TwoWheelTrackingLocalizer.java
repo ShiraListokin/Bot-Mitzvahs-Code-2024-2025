@@ -59,14 +59,14 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         this.drive = drive;
 
-        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LEncoder"));
-        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LB"));
+        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "Encoder"));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LSlide"));
 
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
     }
 
-    public TwoWheelTrackingLocalizer(HardwareMap hardwareMap, SampleMecanumDrive drive, double PlX, double PlY, double PpX, double PpY) {
+    /*public TwoWheelTrackingLocalizer(HardwareMap hardwareMap, SampleMecanumDrive drive, double PlX, double PlY, double PpX, double PpY) {
         super(Arrays.asList(
                 new Pose2d(PlX, PlY, 0),
                 new Pose2d(PpX, PpY, Math.toRadians(90))
@@ -74,12 +74,14 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
         this.drive = drive;
 
-        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "RB"));
-        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LF"));
+        parallelEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "Encoder"));
+        perpendicularEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "LSlide"));
 
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
     }
+
+     */
 
 
     public static double encoderTicksToInches(double ticks) {
@@ -88,12 +90,12 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
 
     @Override
     public double getHeading() {
-        return drive.getRawExternalHeading();
+        return (drive.getRawExternalHeading());
     }
 
     @Override
     public Double getHeadingVelocity() {
-        return drive.getExternalHeadingVelocity();
+        return (drive.getExternalHeadingVelocity());
     }
 
     @NonNull

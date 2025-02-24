@@ -146,7 +146,7 @@ public class cycleAssistSpec extends cycleAssist{
             double[] distances = distanceNumbers(currentPose, secondStep);
 
             //Slides
-            double slideToLocation = hight-87.25;
+            double slideToLocation = hight-86.5;
             slide.slideTo(slideToLocation);
 
             //Linkage
@@ -168,7 +168,7 @@ public class cycleAssistSpec extends cycleAssist{
             double[] distances = distanceNumbers(currentPose, thirdStep);
 
             //Slides
-            double slideToLocation = hight-85.5;
+            double slideToLocation = hight-82;
             slide.slideTo(slideToLocation);
 
             //Linkage

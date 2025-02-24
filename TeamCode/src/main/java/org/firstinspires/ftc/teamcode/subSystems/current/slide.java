@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
-public class slides {
+public class slide {
 
     DcMotorEx LeftSlide, RightSlide;
 
@@ -29,15 +29,10 @@ public class slides {
 
     double idealPosition;
 
-    double slideChanger = 0;
+    double extend;
+    double m;
 
-    double slideUp = 0;
-
-    double[] state;
-    double positionEdit;
-    double linkage;
-
-    public slides(HardwareMap hardwareMap, Telemetry t){
+    public slide(HardwareMap hardwareMap, Telemetry t){
         LeftSlide = hardwareMap.get(DcMotorEx.class, "LSlide");
         RightSlide = hardwareMap.get(DcMotorEx.class, "RSlide");
 
@@ -51,17 +46,14 @@ public class slides {
 
         LeftSlide.setDirection(DcMotorSimple.Direction.REVERSE);
         PID = new PIDController(0.02, 0, 0);
-
-        state = new double[2];
-        state[0] = 0.0; //slide
-        state[1] = 0.0; //linkage
+        extend = 0;
+        m = 0;
     }
 
     public void update(){
-        double power = PID.calculate((RightSlide.getCurrentPosition()/384.5)*33.0*Math.PI-(idealPosition+slideChanger) + positionEdit);
+        double power = PID.calculate((RightSlide.getCurrentPosition()/384.5)*38.3*Math.PI-(idealPosition + /*33.0*extend */+ m));
 
-
-        telemetry.addData("slide position", (RightSlide.getCurrentPosition()/384.5)*33*Math.PI);
+        telemetry.addData("slide position", (RightSlide.getCurrentPosition()/384.5)*38.3*Math.PI);
 
         slidePower = 0.3 + power;
 
@@ -79,8 +71,6 @@ public class slides {
         LeftSlide.setPower(slidePower);
         RightSlide.setPower(slidePower);
 
-        state[0] = ((RightSlide.getCurrentPosition()/384.5)*33*Math.PI) + positionEdit;
-
         //Linkage
     }
 
@@ -88,47 +78,23 @@ public class slides {
         idealPosition = i;
     }
 
-    public void linkageTo(double idealExtensin) {
-        double L = .93-(0.65*idealExtensin);
-        double R = 0.00+(0.65*idealExtensin);
-
-        leftLinkage.setPosition(L);
-        rightLinkage.setPosition(R);
-
-        state[1] = idealExtensin;
-
-    }
-
-    public void setPosition(double p){
-        positionEdit = p;
-    }
-
-    public void reset(){
-        RightSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        RightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-    public void slideChanger(double amount){
-        slideChanger = amount;
-    }
-
-    public double[] state(){
-        return state;
-    }
-
-    public void linkageToEx(double mm){
-        double theta = Math.acos((Math.pow(360,2)-Math.pow(mm,2)-Math.pow(176.725776275,2))/((-2)*mm*176.725776275));
-        linkageTo((theta/Math.PI));
-    }
-
-    public void extend(double percent){
-        double hypot = percent*(2+176.725776275);
-        linkageToEx(hypot);
-
-    }
     public void power(double power){
         LeftSlide.setPower(power);
         RightSlide.setPower(power);
+    }
+
+    public double getPos(){
+        return (RightSlide.getCurrentPosition()/384.5)*38.3*Math.PI;
+    }
+
+    public void extend(double position){
+        leftLinkage.setPosition(1-position);
+        rightLinkage.setPosition(position);
+        extend = position;
+    }
+
+    public void move(double amount){
+        m = amount;
     }
 
 }

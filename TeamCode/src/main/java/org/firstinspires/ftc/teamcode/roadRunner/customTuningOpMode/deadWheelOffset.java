@@ -23,11 +23,11 @@ import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="deadWheelOffsetTest", group="Linear OpMode")
-@Disabled
+//@TeleOp(name="deadWheelOffsetTest", group="Linear OpMode")
+//@Disabled
 
-public class deadWheelOffset extends LinearOpMode {
-
+public class deadWheelOffset {
+/*
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -146,4 +146,6 @@ public class deadWheelOffset extends LinearOpMode {
             }
         }
     }
+
+ */
 }

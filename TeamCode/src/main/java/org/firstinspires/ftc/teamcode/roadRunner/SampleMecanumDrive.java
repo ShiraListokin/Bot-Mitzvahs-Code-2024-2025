@@ -145,9 +145,11 @@ public class SampleMecanumDrive extends MecanumDrive {
         );
     }
 
-    public void changeLock(HardwareMap hardwaremap, double PlX, double PlY, double PpX, double PpY){
+    /*public void changeLock(HardwareMap hardwaremap, double PlX, double PlY, double PpX, double PpY){
         setLocalizer(new TwoWheelTrackingLocalizer(hardwaremap, this, PlX, PlY, PpX, PpY));
     }
+    
+     */
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
         return new TrajectoryBuilder(startPose, VEL_CONSTRAINT, ACCEL_CONSTRAINT);

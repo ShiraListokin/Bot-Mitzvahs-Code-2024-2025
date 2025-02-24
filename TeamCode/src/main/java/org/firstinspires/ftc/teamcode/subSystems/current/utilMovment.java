@@ -55,8 +55,8 @@ public class utilMovment {
 
     public utilMovment(SampleMecanumDrive drive1){
         drive = drive1;
-        translationalPID = new PIDController(0.25, 0, 0.02); //tune
-        headingPID = new PIDController(.8, 0, 0); //tune
+        translationalPID = new PIDController(0.25, 0, 0.06); //tune
+        headingPID = new PIDController(1.1, 0, 0); //tune
 
     }
 
@@ -119,6 +119,64 @@ public class utilMovment {
         double[] array = {rotationSpeed, speed, heading, heading - currentAngle};
         return(array);
     }
+
+
+
+    public double[] moveToRot(Pose2d idealPose, double rCap){
+        Pose2d currentPose = drive.getPoseEstimate();
+
+        //Givens (GO MR FEILD)
+        double xi = currentPose.getX();
+        double yi = currentPose.getY();
+        double thetai = currentPose.getHeading();
+
+        double xf = idealPose.getX();
+        double yf = idealPose.getY();
+        double thetaf = idealPose.getHeading();
+
+        double deltaX = xf-xi;
+        double deltaY = yf-yi;
+
+        //speed
+        double heading = Math.atan2(deltaY, deltaX);
+        double distance = Math.hypot(deltaX, deltaY);
+        double speed = Math.abs(translationalPID.calculate(distance));
+
+        //speedCap
+        if(speed > 0.8){
+            speed = 0.8;
+        }
+        if(speed < 0.15){
+            speed = 0.15;
+        }
+
+        //angleGivens
+        double idealAngle = normalizeAngle(thetaf);
+        double currentAngle = normalizeAngle(thetai);
+
+        //directionToTurn
+        double sign;
+        if (clockwise(idealAngle, currentAngle)){
+            sign = 1.0;
+        }
+        else{
+            sign = -1.0;
+        }
+
+        //rotSpeed
+        double angleInBetween = angleBetween(idealAngle, currentAngle);
+        double rotationSpeed = Math.abs(headingPID.calculate(angleInBetween));
+
+        //rotationCap
+        if(rotationSpeed > rCap){
+            rotationSpeed = rCap;
+        }
+
+        convertToRobotCentric(speed, heading, currentAngle, sign, rotationSpeed);
+        double[] array = {rotationSpeed, speed, heading, heading - currentAngle};
+        return(array);
+    }
+
 
     public double[] moveToDSB(Pose2d idealPose, double sCap){
         Pose2d currentPose = drive.getPoseEstimate();
