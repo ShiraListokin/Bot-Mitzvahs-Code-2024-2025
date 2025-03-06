@@ -2,14 +2,10 @@ package org.firstinspires.ftc.teamcode.opModes.teleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.current.intake;
-import org.firstinspires.ftc.teamcode.subSystems.current.slide;
-import org.firstinspires.ftc.teamcode.subSystems.current.slides;
+import org.firstinspires.ftc.teamcode.subSystems.current.slideStates;
 import org.firstinspires.ftc.teamcode.subSystems.current.utilMovmentTeleOp;
 
 
@@ -19,7 +15,7 @@ public class MainTeleOpTest extends OpMode {
 
     private utilMovmentTeleOp movment;
     private int time;
-    private slide slides;
+    private slideStates slides;
     private intake in;
 
     @Override
@@ -27,11 +23,12 @@ public class MainTeleOpTest extends OpMode {
         drive = new SampleMecanumDrive(hardwareMap);
         movment = new utilMovmentTeleOp(drive, gamepad1, gamepad2);
         in = new intake(hardwareMap, telemetry);
-        slides = new slide(hardwareMap, telemetry);
+        slides = new slideStates(hardwareMap, telemetry);
     }
 
     @Override
     public void loop() {
+
         movment.robotCentricDriver();
         slides.update();
         in.update();
@@ -39,7 +36,7 @@ public class MainTeleOpTest extends OpMode {
         slides.extend(gamepad1.right_trigger);
 
         if(gamepad1.dpad_up){
-            slides.slideTo(1160);
+            slides.slideTo(1130);
             in.direction(0);
         }
         if(gamepad1.dpad_down){
@@ -64,11 +61,13 @@ public class MainTeleOpTest extends OpMode {
             in.direction(-1);
             in.bounce(false);
             slides.move(0);
+            in.drop(0.8);
         }
         else{
             in.direction(0.1);
             in.bounce(false);
             slides.move(0);
+            in.drop(0.8);
         }
 
 

@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.subSystems.current.intake;
 import org.firstinspires.ftc.teamcode.subSystems.current.slides;
 import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
-public class cycleAssistSpecOld extends cycleAssist{
-
+public class cycleAssistSpecOld /*extends cycleAssist*/{
+    /*
     //Telemetry
     private Telemetry telemetry;
 
@@ -592,9 +592,9 @@ public class cycleAssistSpecOld extends cycleAssist{
         return false;
     }
 
-     */
 
-    public boolean cycle(Pose2d DEPOSIT, Pose2d INTAKE_CYCLE, double h){
+
+    public boolean /*cycle(Pose2d DEPOSIT, Pose2d INTAKE_CYCLE, double h){
         //Update
         slide.update();
         in.update();
@@ -656,4 +656,5 @@ public class cycleAssistSpecOld extends cycleAssist{
         //Intake
         in.direction(0);
     }
+    */
 }

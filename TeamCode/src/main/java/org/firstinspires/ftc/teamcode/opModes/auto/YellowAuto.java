@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.assist.cycleAssistYellow;
 //SubSystems
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.current.intake;
+import org.firstinspires.ftc.teamcode.subSystems.current.slideStates;
 import org.firstinspires.ftc.teamcode.subSystems.current.slides;
 import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
@@ -27,15 +28,15 @@ public class YellowAuto extends LinearOpMode {
     private utilMovment util;
 
     private intake in;
-    private slides slide;
+    private slideStates slide;
 
-    private final Pose2d BASKET = new Pose2d(9.5, -13.5, Math.PI/4);
+    private final Pose2d BASKET = new Pose2d(12, -8, Math.PI/4);
 
-    private final Pose2d PRESET1 = new Pose2d(9.6, -38, 3*Math.PI/2);
+    private final Pose2d PRESET1 = new Pose2d(8.6, -24, 3*Math.PI/2);
 
-    private final Pose2d PRESET2 = new Pose2d(19.6, -38, 3*Math.PI/2);
+    private final Pose2d PRESET2 = new Pose2d(18.6, -24, 3*Math.PI/2);
 
-    private final Pose2d PRESET3 = new Pose2d(22, -32.2, (7*Math.PI/4)+0.25);
+    private final Pose2d PRESET3 = new Pose2d(17.7, -36.5, 0);
 
     private int state = 0;
 
@@ -45,12 +46,12 @@ public class YellowAuto extends LinearOpMode {
         telemetry.update();
 
         in = new intake(hardwareMap, telemetry);
-        slide = new slides(hardwareMap, telemetry);
+        slide = new slideStates(hardwareMap, telemetry);
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setPoseEstimate(new Pose2d(0, 0,0));
         util = new utilMovment(drive);
 
-        cycleAssistYellow assist = new cycleAssistYellow(in, slide, util, drive, runtime);
+        cycleAssistYellow assist = new cycleAssistYellow(in, slide, util, drive, runtime, telemetry);
 
         waitForStart();
         runtime.reset();
@@ -67,21 +68,21 @@ public class YellowAuto extends LinearOpMode {
                 }
             }
             if(state == 1){
-                boolean moveOn = assist.cycle(PRESET1, BASKET, 15, 0, 2500, 0, 0, -1);
+                boolean moveOn = assist.cycle(PRESET1, BASKET, 1000, 0.5, 3000, 0.26);
                 if(moveOn){
                     state ++;
                     assist.reset();
                 }
             }
             if(state == 2){
-                boolean moveOn = assist.cycle(PRESET2, new Pose2d(9.5, -13, Math.PI/4), 15, 0, 2500, 0, 0, -1);
+                boolean moveOn = assist.cycle(PRESET2, BASKET, 1000, 0.7, 3000, 0.26);
                 if(moveOn){
                     state ++;
                     assist.reset();
                 }
             }
             if(state == 3){
-                boolean moveOn = assist.cycle(PRESET3, new Pose2d(8.5, -11.75, Math.PI/4), 5, 3, 3000, 0.5, 6, 1500);
+                boolean moveOn = assist.cycle(PRESET3, new Pose2d(12, -8, Math.PI/4), 1000, 0, 300, 0.12);
                 if(moveOn){
                     state ++;
                     assist.reset();

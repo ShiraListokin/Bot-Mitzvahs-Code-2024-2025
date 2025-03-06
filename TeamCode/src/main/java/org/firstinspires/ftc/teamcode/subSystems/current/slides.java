@@ -41,6 +41,7 @@ public class slides {
         LeftSlide = hardwareMap.get(DcMotorEx.class, "LSlide");
         RightSlide = hardwareMap.get(DcMotorEx.class, "RSlide");
 
+
         rightLinkage = hardwareMap.get(ServoImplEx.class, "RLinkage");
         leftLinkage = hardwareMap.get(ServoImplEx.class, "LLinkage");
 

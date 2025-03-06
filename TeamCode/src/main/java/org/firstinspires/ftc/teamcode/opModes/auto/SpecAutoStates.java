@@ -6,13 +6,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 //CycleAssist
-import org.firstinspires.ftc.teamcode.assist.cycleAssistSpec;
 
 //SubSystems
 import org.firstinspires.ftc.teamcode.assist.cycleAssistSpecStates;
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.current.intake;
-import org.firstinspires.ftc.teamcode.subSystems.current.slide;
+import org.firstinspires.ftc.teamcode.subSystems.current.slideStates;
 import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
 @Autonomous(name="SpecAutoStates")
@@ -23,7 +22,7 @@ public class SpecAutoStates extends LinearOpMode{
     private SampleMecanumDrive drive;
     private utilMovment util;
     private intake in;
-    private slide slides;
+    private slideStates slides;
 
     //State
     private int state = 0;
@@ -36,7 +35,7 @@ public class SpecAutoStates extends LinearOpMode{
 
         //SubSystems
         in = new intake(hardwareMap, telemetry);
-        slides = new slide(hardwareMap, telemetry);
+        slides = new slideStates(hardwareMap, telemetry);
         drive = new SampleMecanumDrive(hardwareMap);
         util = new utilMovment(drive);
 
@@ -56,50 +55,45 @@ public class SpecAutoStates extends LinearOpMode{
             telemetry.update();
 
             if (state == 0) {
-                boolean moveOn = assist.plaseSpecimin(new Pose2d(22, 0, 0));
+                boolean moveOn = assist.plaseSpecimin(new Pose2d(21, 1, 0), 0, 0.4);
                 if (moveOn) {
                     state++;
                 }
             }
-            /*
-            if (state == 1) {
-                boolean moveOn = assist.moveSpec();
+            if(state == 2){
+                boolean moveOn = assist.pushSpec();
                 if (moveOn) {
                     state++;
                 }
             }
-            /*if (state == 2) {
-                boolean moveOn = assist.cycleSpec(new Pose2d(22, 2, 0), new Pose2d(12, 0, 4.2));//    private final Pose2d SPEC3O = new Pose2d(10, -17.8, 4.2);
-
-                if (moveOn) {
-                    state++;
-                }
-            }
-            if (state == 3) {
-                boolean moveOn = assist.cycleSpec(new Pose2d(22, 4, 0), new Pose2d(12, 0, 4.2));
-                if (moveOn) {
-                    state++;
-                }
-            }
-            if (state == 4) {
-                boolean moveOn = assist.cycleSpec(new Pose2d(22, 6, 0), new Pose2d(12, 0, 4.2));
-                if (moveOn) {
-                    state++;
-                }
-            }
-            if (state == 5) {
-                boolean moveOn = assist.cycleSpec(new Pose2d(22, 8, 0), new Pose2d(12, 0, 4.2));
-                if (moveOn) {
-                    state++;
-                }
-            }
-
-             */
             if(state == 1){
-                assist.park();
+                boolean moveOn = assist.cycleSpec(new Pose2d(21, 4, 0), new Pose2d(-1.3, -21, 3*Math.PI/2), 2500);
+                if (moveOn) {
+                    state++;
+                }
+            }
+            if(state == 3){
+                boolean moveOn = assist.setUp();
+                if (moveOn) {
+                    state++;
+                }
+            }
+            if(state == 4){
+                boolean moveOn = assist.cycleSpec(new Pose2d(21, 7, 0), new Pose2d(-1, -21, 3*Math.PI/2), 400);
+                if (moveOn) {
+                    state++;
+                }
+            }
+            if(state == 5){
+                boolean moveOn = assist.cycleSpec(new Pose2d(21, 10, 0), new Pose2d(-1, -21, 3*Math.PI/2), 2100);
+                if (moveOn) {
+                    state++;
+                }
+            }
+            if(state == 6){
+               assist.park();
             }
         }
-
     }
 
 }

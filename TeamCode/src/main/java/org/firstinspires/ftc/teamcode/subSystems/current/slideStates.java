@@ -1,11 +1,6 @@
 package org.firstinspires.ftc.teamcode.subSystems.current;
 
-import static java.lang.Math.*;
-
-import androidx.annotation.NonNull;
-
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,9 +10,9 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
-public class slide {
+public class slideStates {
 
-    DcMotorEx LeftSlide, RightSlide;
+    DcMotorEx LeftSlide, RightSlide, hang;
 
     ServoImplEx leftLinkage, rightLinkage;
 
@@ -32,9 +27,10 @@ public class slide {
     double extend;
     double m;
 
-    public slide(HardwareMap hardwareMap, Telemetry t){
+    public slideStates(HardwareMap hardwareMap, Telemetry t){
         LeftSlide = hardwareMap.get(DcMotorEx.class, "LSlide");
         RightSlide = hardwareMap.get(DcMotorEx.class, "RSlide");
+        hang = hardwareMap.get(DcMotorEx.class, "hang");
 
         rightLinkage = hardwareMap.get(ServoImplEx.class, "RLinkage");
         leftLinkage = hardwareMap.get(ServoImplEx.class, "LLinkage");
@@ -54,6 +50,7 @@ public class slide {
         double power = PID.calculate((RightSlide.getCurrentPosition()/384.5)*38.3*Math.PI-(idealPosition + /*33.0*extend */+ m));
 
         telemetry.addData("slide position", (RightSlide.getCurrentPosition()/384.5)*38.3*Math.PI);
+        telemetry.addData("Slide Position", idealPosition);
 
         slidePower = 0.3 + power;
 
@@ -67,9 +64,12 @@ public class slide {
         telemetry.addData("slide power", slidePower);
         telemetry.addData("L current draw", LeftSlide.getCurrent(CurrentUnit.AMPS));
         telemetry.addData("R current draw", RightSlide.getCurrent(CurrentUnit.AMPS));
+        telemetry.addData("h draw", hang.getCurrent(CurrentUnit.AMPS));
+
 
         LeftSlide.setPower(slidePower);
         RightSlide.setPower(slidePower);
+        hang.setPower(slidePower);
 
         //Linkage
     }
@@ -88,8 +88,8 @@ public class slide {
     }
 
     public void extend(double position){
-        leftLinkage.setPosition(1-position);
-        rightLinkage.setPosition(position);
+        leftLinkage.setPosition(position);
+        rightLinkage.setPosition(1-position);
         extend = position;
     }
 

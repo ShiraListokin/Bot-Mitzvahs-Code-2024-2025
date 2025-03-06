@@ -14,9 +14,9 @@ import org.firstinspires.ftc.teamcode.subSystems.current.intake;
 import org.firstinspires.ftc.teamcode.subSystems.current.slides;
 import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
-@Autonomous(name="SpecAuto")
-public class SpecAuto extends LinearOpMode{
-
+/*@Autonomous(name="SpecAuto")*/
+public class SpecAuto /*extends LinearOpMode*/{
+/*
     //Poses
     private final Pose2d DEPOSIT_CYCLE1 = new Pose2d(16.3, 3, 0); //TODO fill in
     private final Pose2d DEPOSIT_CYCLE2 = new Pose2d(18, 6.5, 0); //TODO fill in
@@ -108,11 +108,12 @@ public class SpecAuto extends LinearOpMode{
                     assist.resetCycle();
                 }
             }
-             */
+
             telemetry.addData("state", state);
             if(state == 3){
                 assist.park();
             }
         }
     }
+    */
 }

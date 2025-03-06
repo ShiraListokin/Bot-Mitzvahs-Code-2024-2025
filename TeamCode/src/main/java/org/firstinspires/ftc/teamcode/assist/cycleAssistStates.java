@@ -5,14 +5,14 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.current.intake;
-import org.firstinspires.ftc.teamcode.subSystems.current.slide;
+import org.firstinspires.ftc.teamcode.subSystems.current.slideStates;
 import org.firstinspires.ftc.teamcode.subSystems.current.utilMovment;
 
 public abstract class cycleAssistStates{
 
     //Subsystems
     protected intake in;
-    protected slide slides;
+    protected slideStates slides;
     protected utilMovment movment;
     protected SampleMecanumDrive drive;
     ElapsedTime runtime;
@@ -21,7 +21,7 @@ public abstract class cycleAssistStates{
     private double time = -1;
 
 
-    public cycleAssistStates(intake i, slide s, utilMovment m, SampleMecanumDrive sa, ElapsedTime r) {
+    public cycleAssistStates(intake i, slideStates s, utilMovment m, SampleMecanumDrive sa, ElapsedTime r) {
         in = i;
         slides = s;
         movment = m;

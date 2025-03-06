@@ -44,22 +44,20 @@ public class intake {
             if(pos == 0 && System.currentTimeMillis() - time > 100){
                 pos = 1;
                 time = System.currentTimeMillis();
-                drop(0.43);
+                drop(0);
             }
             if(pos == 1 && System.currentTimeMillis() - time > 100){
                 pos = 0;
                 time = System.currentTimeMillis();
-                drop(0.66);
+                drop(0.3);
             }
-        }
-        else{
-            drop(0.5);
         }
 
     }
 
     public void drop (double h){
         drop.setPosition(0.2*h);
+        telemetry.addData("dropHight", h);
     }
 
     public void bounce(boolean b){
