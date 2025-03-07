@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opModes.teleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.subSystems.current.utilMovmentTeleOp;
 
 
 @TeleOp
+@Disabled
 public class MainTeleOp extends OpMode {
     private SampleMecanumDrive drive;
 
