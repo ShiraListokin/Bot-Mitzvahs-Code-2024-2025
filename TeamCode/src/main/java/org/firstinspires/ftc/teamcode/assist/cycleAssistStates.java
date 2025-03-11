@@ -15,18 +15,16 @@ public abstract class cycleAssistStates{
     protected slideStates slides;
     protected utilMovment movment;
     protected SampleMecanumDrive drive;
-    ElapsedTime runtime;
 
     //Time
     private double time = -1;
 
 
-    public cycleAssistStates(intake i, slideStates s, utilMovment m, SampleMecanumDrive sa, ElapsedTime r) {
+    public cycleAssistStates(intake i, slideStates s, utilMovment m, SampleMecanumDrive sa) {
         in = i;
         slides = s;
         movment = m;
         drive = sa;
-        runtime = r;
     }
 
 

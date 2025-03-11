@@ -42,8 +42,8 @@ public class cycleAssistSpecStates extends cycleAssistStates{
     private final Pose2d SPEC3 = new Pose2d(13, -41.8, 5.8);
     private final Pose2d SPEC3O = new Pose2d(10, -17.8, 4.2);
 
-    public cycleAssistSpecStates(intake i, slideStates s, utilMovment m, SampleMecanumDrive sa, ElapsedTime r, Telemetry t) {
-        super(i, s, m, sa, r);
+    public cycleAssistSpecStates(intake i, slideStates s, utilMovment m, SampleMecanumDrive sa, Telemetry t) {
+        super(i, s, m, sa);
         telemetry = t;
         placeState = 0;
         moveState = 0;
@@ -84,7 +84,7 @@ public class cycleAssistSpecStates extends cycleAssistStates{
             in.direction(-0.3);
 
             //Check
-            if (checkIfInsideBox(distances[1], 0.6, distances[0], 1) || System.currentTimeMillis() - time > 850) {
+            if (checkIfInsideBox(distances[1], 0.6, distances[0], 1) || System.currentTimeMillis() - time > 950) {
                 pushState++;
                 time = 0;
             }
@@ -92,7 +92,7 @@ public class cycleAssistSpecStates extends cycleAssistStates{
         if (pushState == 1) { // Move to top left
 
             //Drive
-            movment.moveToDSB(TOP_LEFT_CORNER_SPEC1, 1.4);
+            movment.moveToDSB(TOP_LEFT_CORNER_SPEC1, 1.42);
             double[] distances = distanceNumbers(currentPose, TOP_LEFT_CORNER_SPEC1);
 
             //Slides
@@ -107,7 +107,7 @@ public class cycleAssistSpecStates extends cycleAssistStates{
         }
         if (pushState == 2) { // Move to top right
             //Drive
-            movment.moveTo(TOP_MIDDLE_CORNER_SPEC1);
+            movment.moveTo(TOP_MIDDLE_CORNER_SPEC1, 1.2);
             double[] distances = distanceNumbers(currentPose, TOP_MIDDLE_CORNER_SPEC1);
 
             //Slides
@@ -123,7 +123,7 @@ public class cycleAssistSpecStates extends cycleAssistStates{
         if (pushState == 3) { // Move to observation zone
 
             //Drive
-            movment.moveTo(OBSERVATION_ZONE_SPEC1, 1.4);
+            movment.moveTo(OBSERVATION_ZONE_SPEC1, 1.42);
             double[] distances = distanceNumbers(currentPose, OBSERVATION_ZONE_SPEC1);
 
             //Slide
@@ -140,7 +140,7 @@ public class cycleAssistSpecStates extends cycleAssistStates{
         if (pushState == 4) { // Move to top middle
 
             //Drive
-            movment.moveToDSB(TOP_MIDDLE_CORNER_SPEC1, 1.4);
+            movment.moveToDSB(TOP_MIDDLE_CORNER_SPEC1, 1.42);
             double[] distances = distanceNumbers(currentPose, TOP_MIDDLE_CORNER_SPEC1);
 
             //Slides
@@ -154,7 +154,7 @@ public class cycleAssistSpecStates extends cycleAssistStates{
         }
         if (pushState == 5) { // Move to top right
             //Drive
-            movment.moveTo(TOP_RIGHT_CORNER_SPEC2, 1);
+            movment.moveTo(TOP_RIGHT_CORNER_SPEC2, 1.1);
             double[] distances = distanceNumbers(currentPose, TOP_RIGHT_CORNER_SPEC2);
 
             //Slides
@@ -170,7 +170,7 @@ public class cycleAssistSpecStates extends cycleAssistStates{
         if (pushState == 6) { // Move to observation zone
 
             //Drive
-            movment.moveTo(OBSERVATION_ZONE_SPEC2, 1.4);
+            movment.moveTo(OBSERVATION_ZONE_SPEC2, 1.42);
             double[] distances = distanceNumbers(currentPose, OBSERVATION_ZONE_SPEC2);
 
             //Slides
@@ -252,7 +252,7 @@ public class cycleAssistSpecStates extends cycleAssistStates{
 
             //intake
             in.direction(1);
-
+            telemetry.addData("Distances", distances);
             //Check
             if (checkIfInsideBox(distances[1], .5, distances[0], 1.5) && slides.getPos() > 675+hightZDif){
                 placeState++;

@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.opModes.teleOp;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.assist.cycleAssistSpecStates;
 import org.firstinspires.ftc.teamcode.roadRunner.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subSystems.current.intake;
 import org.firstinspires.ftc.teamcode.subSystems.current.slideStates;
@@ -17,6 +20,13 @@ public class MainTeleOpTest extends OpMode {
     private int time;
     private slideStates slides;
     private intake in;
+    private boolean notPressed;
+    private boolean manual;
+    private cycleAssistSpecStates assist;
+    private boolean override;
+    private boolean pressed;
+    private int counter;
+    private boolean specMode;
 
     @Override
     public void init() {
@@ -24,176 +34,140 @@ public class MainTeleOpTest extends OpMode {
         movment = new utilMovmentTeleOp(drive, gamepad1, gamepad2);
         in = new intake(hardwareMap, telemetry);
         slides = new slideStates(hardwareMap, telemetry);
+        assist = new cycleAssistSpecStates(in, slides, movment, drive, telemetry);
+        notPressed = true;
+        counter = 0;
+        specMode = false;
+        manual = true;
     }
 
     @Override
     public void loop() {
 
+        //Update
         movment.robotCentricDriver();
-        slides.update();
         in.update();
 
-        slides.extend(gamepad1.right_trigger);
+        if (manual) {
 
-        if(gamepad1.dpad_up){
-            slides.slideTo(1130);
-            in.direction(0);
-        }
-        if(gamepad1.dpad_down){
-            slides.slideTo(80);
-            in.direction(0);
-        }
-        if(gamepad1.dpad_right){
-            slides.slideTo(678);
-            in.direction(1);
-        }
-        if(gamepad1.dpad_left){
-            slides.slideTo(470);
-            in.direction(0);
-        }
-
-        if(gamepad1.right_bumper){
-            in.direction(1);
-            in.bounce(true);
-            slides.move(-80);
-        }
-        else if(gamepad1.left_bumper){
-            in.direction(-1);
-            in.bounce(false);
-            slides.move(0);
-            in.drop(0.8);
-        }
-        else{
-            in.direction(0.1);
-            in.bounce(false);
-            slides.move(0);
-            in.drop(0.8);
-        }
-
-
-        /*
-        DcMotorEx LeftSlide = hardwareMap.get(DcMotorEx.class, "LSlide");
-        DcMotorEx Rightlide = hardwareMap.get(DcMotorEx.class, "RSlide");
-        DcMotorEx leftFront = hardwareMap.get(DcMotorEx.class, "LF");
-        DcMotorEx leftRear = hardwareMap.get(DcMotorEx.class, "LB");
-        DcMotorEx rightRear = hardwareMap.get(DcMotorEx.class, "RB");
-        DcMotorEx rightFront = hardwareMap.get(DcMotorEx.class, "RF");
-        DcMotorEx hang = hardwareMap.get(DcMotorEx.class, "hang");
-        ServoImplEx drop = hardwareMap.get(ServoImplEx.class, "drop");
-        System.currentTimeMillis();
-        slides.slideTo(20);
-        slides.update();
-        if(gamepad1.x){
-            slides.extend(0);
-        }
-        if(gamepad1.y){
-            slides.extend(1);
-        }
-        if(gamepad1.a){ //back
-            time++;
-            if(time < 100){
-                drop.setPosition(0.07);
+            if (gamepad1.right_trigger > 0.1) {
+                slides.power(gamepad1.right_trigger);
+            } else {
+                slides.power(-gamepad1.left_trigger);
             }
-            else{
-                drop.setPosition(0);
-                if(time > 200){
-                    time = 0;
+            telemetry.addData("slide pos", slides.getPos());
+            if (gamepad1.right_bumper) {
+                in.direction(1);
+                in.bounce(true);
+            } else if (gamepad1.left_bumper) {
+                in.direction(-1);
+                in.bounce(false);
+                in.drop(0.8);
+            } else {
+                in.direction(0.1);
+                in.bounce(false);
+                in.drop(0.8);
+            }
+            if (gamepad1.y) {
+                slides.mZero();
+            }
+            if (gamepad1.b) {
+                slides.extend(1);
+            }
+            if (gamepad1.x) {
+                slides.extend(0);
+            }
+            if (gamepad1.a && pressed) {
+                manual = false;
+                pressed = false;
+            }
+        }
+
+        if (!manual) {
+            slides.update();
+            if (gamepad1.a && pressed) {
+                manual = true;
+                pressed = false;
+            }
+
+
+            //Extend
+            if(!specMode){
+                slides.extend(gamepad1.right_trigger);
+            }
+
+            if (gamepad1.dpad_up) { //basket
+                slides.slideTo(1130);
+                in.direction(0);
+                specMode = false;
+            }
+            if (gamepad1.dpad_down) { //rest
+                slides.slideTo(100);
+                in.direction(0);
+                specMode = false;
+            }
+            if (gamepad1.dpad_right) { //Spec Intake
+                slides.slideTo(0);
+                in.direction(1);
+                in.drop(0.8);
+                slides.extend(0.3);
+                override = true;
+                specMode = false;
+            } else {
+                override = false;
+            }
+
+            if (gamepad1.dpad_left && notPressed) {
+                specMode = true;
+                if(counter == 0){
+                    notPressed = false;
+                    slides.slideTo(700);
+                    slides.extend(0.6);
+                    counter = 1;
+                    in.direction(1);
+                    in.drop(0.2);
+                }
+                else{
+                    notPressed = false;
+                    slides.slideTo(663);
+                    slides.extend(0);
+                    counter = 0;
+                    in.direction(1);
+                    in.drop(0.2);
                 }
             }
-        }
-        if(gamepad1.b){ //back
-            drop.setPosition(0.2);
-        }
 
+            if(!specMode) {
+                if (gamepad1.right_bumper) {
+                    in.direction(1);
+                    in.bounce(true);
+                    slides.move(-100);
+                } else if (gamepad1.left_bumper) {
+                    in.direction(-1);
+                    in.bounce(false);
+                    slides.move(0);
+                    in.drop(0.8);
+                } else if (!override) {
+                    in.direction(0.1);
+                    in.bounce(false);
+                    slides.move(0);
+                    in.drop(0.8);
+                }
+            }
 
-        if(gamepad1.dpad_up){
-            in.direction(1);
+            if (gamepad1.y) {
+                slides.autoZero();
+            } else {
+                slides.exit();
+            }
         }
-        else if(gamepad1.dpad_down){
-            in.direction(-1);
+        telemetry.update();
+        if (!gamepad1.a) {
+            pressed = true;
         }
-        else{
-            in.direction(0);
+        if (!gamepad1.dpad_left) {
+            notPressed = true;
         }
-        in.update();
-
-        /*
-        if(gamepad1.x){ //forward
-            rightRear.setPower(.2);
-        }
-        else{
-            rightRear.setPower(0);
-        }
-
-        if(gamepad1.y){ //forward
-            rightFront.setPower(.2);
-        }
-        else{
-            rightFront.setPower(0);
-        }
-        */
-
-
-        /*
-        if (gamepad1.right_trigger > 0.1) {
-            Rightlide.setPower(gamepad1.right_trigger); //forward
-            LeftSlide.setPower(gamepad1.right_trigger);
-            hang.setPower(gamepad1.right_trigger);
-        } else if (gamepad1.left_trigger > 0.1) {
-            Rightlide.setPower(-gamepad1.left_trigger); //forward
-            LeftSlide.setPower(-gamepad1.left_trigger);
-            hang.setPower(-gamepad1.left_trigger);
-        }
-        else{
-            Rightlide.setPower(0); //forward
-            LeftSlide.setPower(0);
-            hang.setPower(0);
-        }
-        */
-
-
-        /*
-        if(gamepad1.dpad_up){
-            slides.slideTo(1120);
-        }
-        if(gamepad1.dpad_right){
-            slides.slideTo(1120);
-        }
-        if(gamepad1.dpad_left){
-            slides.slideTo(0);
-        }
-        slides.update();
-
-
-
-
-        if(gamepad1.dpad_up){
-            in.direction(1);
-        }
-        else if(gamepad1.dpad_down){
-            in.direction(-1);
-        }
-        else{
-            in.direction(0);
-        }
-        in.update();
-
-        ServoImplEx rightLinkage = hardwareMap.get(ServoImplEx.class, "RLinkage");
-        ServoImplEx leftLinkage = hardwareMap.get(ServoImplEx.class, "LLinkage");
-        if(gamepad1.a){
-            rightLinkage.setPosition(.1);
-        }
-        if(gamepad1.b){
-            rightLinkage.setPosition(1);
-        }
-        if(gamepad1.x){
-            leftLinkage.setPosition(0);
-        }
-        if(gamepad1.y){
-            leftLinkage.setPosition(1);
-        }
-
-         */
     }
 }
 

@@ -40,10 +40,10 @@ public class SpecAutoStates extends LinearOpMode{
         util = new utilMovment(drive);
 
         //PreSetValues
-        drive.setPoseEstimate(new Pose2d(0, 0, 0));
+        drive.setPoseEstimate(new Pose2d(-0.5, 0, 0));
 
         //util
-        cycleAssistSpecStates assist = new cycleAssistSpecStates(in, slides, util, drive, runtime, telemetry);
+        cycleAssistSpecStates assist = new cycleAssistSpecStates(in, slides, util, drive, telemetry);
 
         waitForStart();
         runtime.reset();
